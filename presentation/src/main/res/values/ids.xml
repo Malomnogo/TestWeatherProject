@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="weatherLayout" type="id"/>
+    <item name="cityTextView" type="id"/>
+    <item name="currentTemperatureTextView" type="id"/>
+    <item name="error" type="id"/>
+    <item name="errorTextView" type="id"/>
+    <item name="retryButton" type="id"/>
+    <item name="progressBar" type="id"/>
+</resources>
+

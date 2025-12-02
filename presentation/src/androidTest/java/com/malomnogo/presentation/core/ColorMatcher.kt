@@ -1,4 +1,4 @@
-package com.malomnogo.testweatherproject.core
+package com.malomnogo.presentation.core
 
 import android.graphics.Color
 import android.view.View

@@ -1,4 +1,4 @@
-package com.malomnogo.testweatherproject
+package com.malomnogo.presentation
 
 import com.malomnogo.domain.WeatherDomain
 import com.malomnogo.domain.WeatherRepository
@@ -261,3 +261,4 @@ private class FakeRepository(private val order: Order) : WeatherRepository {
         return result
     }
 }
+

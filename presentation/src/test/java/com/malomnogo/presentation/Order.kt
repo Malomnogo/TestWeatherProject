@@ -1,4 +1,4 @@
-package com.malomnogo.testweatherproject
+package com.malomnogo.presentation
 
 data class Order(private val list: MutableList<String> = mutableListOf()) {
 

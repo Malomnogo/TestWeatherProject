@@ -1,4 +1,4 @@
-package com.malomnogo.testweatherproject
+package com.malomnogo.presentation
 
 import com.malomnogo.presentation.core.RunAsync
 import kotlinx.coroutines.CoroutineScope

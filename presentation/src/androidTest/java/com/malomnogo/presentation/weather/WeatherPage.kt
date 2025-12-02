@@ -1,4 +1,4 @@
-package com.malomnogo.testweatherproject.weather
+package com.malomnogo.presentation.weather
 
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -44,3 +44,4 @@ class WeatherPage {
         ).check(matches(withText(temperature)))
     }
 }
+

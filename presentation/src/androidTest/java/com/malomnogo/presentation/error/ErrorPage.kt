@@ -1,8 +1,6 @@
-package com.malomnogo.testweatherproject.error
+package com.malomnogo.presentation.error
 
-import android.widget.Button
 import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
@@ -12,7 +10,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withParent
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.malomnogo.presentation.R
-import com.malomnogo.testweatherproject.core.ColorMatcher
+import com.malomnogo.presentation.core.ColorMatcher
 import com.malomnogo.presentation.core.views.BaseError
 import com.malomnogo.presentation.core.views.ColorfulTextView
 import com.malomnogo.presentation.weather.views.RetryButton
@@ -35,7 +33,7 @@ class ErrorPage {
         onView(
             allOf(
                 withId(R.id.errorTextView),
-                isAssignableFrom(TextView::class.java),
+                isAssignableFrom(ColorfulTextView::class.java),
                 withParent(isAssignableFrom(BaseError::class.java)),
             )
         )
@@ -48,9 +46,10 @@ class ErrorPage {
             allOf(
                 withId(R.id.retryButton),
                 withText("Retry"),
-                isAssignableFrom(Button::class.java),
+                isAssignableFrom(RetryButton::class.java),
                 withParent(isAssignableFrom(BaseError::class.java)),
             )
         ).perform(click())
     }
 }
+

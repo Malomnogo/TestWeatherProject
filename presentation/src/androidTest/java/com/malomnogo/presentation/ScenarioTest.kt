@@ -1,11 +1,10 @@
-package com.malomnogo.testweatherproject
+package com.malomnogo.presentation
 
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.malomnogo.presentation.MainActivity
-import com.malomnogo.testweatherproject.error.ErrorPage
-import com.malomnogo.testweatherproject.progress.ProgressPage
-import com.malomnogo.testweatherproject.weather.WeatherPage
+import com.malomnogo.presentation.error.ErrorPage
+import com.malomnogo.presentation.progress.ProgressPage
+import com.malomnogo.presentation.weather.WeatherPage
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -14,7 +13,7 @@ import org.junit.runner.RunWith
 class ScenarioTest {
 
     @get:Rule
-    var activityScenarioRule: ActivityScenarioRule<MainActivity> = ActivityScenarioRule(MainActivity::class.java)
+    var activityScenarioRule = ActivityScenarioRule(MainActivity::class.java)
 
     @Test
     fun scenarioTest() {
@@ -37,3 +36,4 @@ class ScenarioTest {
         errorPage.checkNotVisible()
     }
 }
+

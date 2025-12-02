@@ -1,4 +1,4 @@
-package com.malomnogo.testweatherproject.progress
+package com.malomnogo.presentation.progress
 
 import android.widget.LinearLayout
 import androidx.test.espresso.Espresso.onView
@@ -34,3 +34,4 @@ class ProgressPage {
         ).check(matches(not(isDisplayed())))
     }
 }
+
