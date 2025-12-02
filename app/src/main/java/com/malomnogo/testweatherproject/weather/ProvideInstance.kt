@@ -52,7 +52,6 @@ interface ProvideInstance {
         override fun provideApiKey() = MockProvideApiKey()
 
         class MockProvideApiKey : ProvideApiKey {
-            //use it for mock tests with debug key
             override fun weatherApiKey() = ""
         }
 
