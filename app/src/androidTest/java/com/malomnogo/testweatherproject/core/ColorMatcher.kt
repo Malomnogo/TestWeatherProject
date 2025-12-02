@@ -19,4 +19,3 @@ class ColorMatcher(private val color: Int) :
         return item.currentTextColor == color
     }
 }
-
