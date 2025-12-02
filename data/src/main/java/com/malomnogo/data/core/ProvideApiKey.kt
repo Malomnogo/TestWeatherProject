@@ -1,15 +1,6 @@
 package com.malomnogo.data.core
 
-interface ApiKeyStorage {
+interface ProvideApiKey {
 
     fun weatherApiKey(): String
-
-    class Base(
-        private val apiKey: String
-    ) : ApiKeyStorage {
-        
-        override fun weatherApiKey(): String {
-            return apiKey
-        }
-    }
 }
