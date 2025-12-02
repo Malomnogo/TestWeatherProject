@@ -6,7 +6,7 @@ import com.malomnogo.presentation.core.ProvideViewModel
 import com.malomnogo.testweatherproject.weather.modules.Core
 import com.malomnogo.testweatherproject.weather.modules.ProvideModule
 
-class App : Application(), ProvideViewModel {
+abstract class App : Application(), ProvideViewModel {
 
     private lateinit var factory: ProvideViewModel.Factory
 
@@ -14,11 +14,26 @@ class App : Application(), ProvideViewModel {
         super.onCreate()
         factory = ProvideViewModel.Factory(
             makeViewModel = BaseProvideViewModel(
-                ProvideModule.Base(core = Core.Base())
+                ProvideModule.Base(
+                    core = Core.Base(context = this),
+                    provideInstance = provideInstance()
+                )
             )
         )
     }
 
+    abstract fun provideInstance(): ProvideInstance
+
     override fun <T : ViewModel> viewModel(viewModelClass: Class<T>): T =
         factory.viewModel(viewModelClass)
+}
+
+class Release : App() {
+
+    override fun provideInstance() = ProvideInstance.Base()
+}
+
+class Mock : App() {
+
+    override fun provideInstance() = ProvideInstance.Mock()
 }
