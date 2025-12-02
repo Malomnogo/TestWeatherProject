@@ -2,6 +2,9 @@ package com.malomnogo.testweatherproject
 
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.malomnogo.testweatherproject.error.ErrorPage
+import com.malomnogo.testweatherproject.progress.ProgressPage
+import com.malomnogo.testweatherproject.weather.WeatherPage
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -22,7 +25,7 @@ class ScenarioTest {
         errorPage.checkNotVisible()
         weatherPage.checkNotVisible()
 
-        errorPage.checkError("No internet connection")
+        errorPage.checkError(message = "No internet connection")
         progressPage.checkNotVisible()
         weatherPage.checkNotVisible()
 
@@ -31,11 +34,11 @@ class ScenarioTest {
         errorPage.checkNotVisible()
         weatherPage.checkNotVisible()
 
-        weatherPage.checkWeather(
+        weatherPage.checkCurrentWeather(
             city = "Moscow",
             temperature = "30°C"
         )
-        progressPage.checkNotVisbile()
+        progressPage.checkNotVisible()
         errorPage.checkNotVisible()
     }
 }
