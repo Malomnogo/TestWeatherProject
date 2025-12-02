@@ -27,8 +27,23 @@ class ScenarioTest {
         progressPage.checkNotVisible()
         weatherPage.checkNotVisible()
 
+        activityScenarioRule.scenario.recreate()
+
+        errorPage.checkError(message = "No internet connection")
+        progressPage.checkNotVisible()
+        weatherPage.checkNotVisible()
+
         errorPage.clickRetry()
         errorPage.checkNotVisible()
+
+        weatherPage.checkCurrentWeather(
+            city = "Moscow",
+            temperature = "30°C"
+        )
+        progressPage.checkNotVisible()
+        errorPage.checkNotVisible()
+
+        activityScenarioRule.scenario.recreate()
 
         weatherPage.checkCurrentWeather(
             city = "Moscow",

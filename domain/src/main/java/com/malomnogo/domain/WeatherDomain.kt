@@ -8,7 +8,7 @@ interface WeatherDomain {
 
         fun mapSuccess(
             city: String,
-            temperature: Double
+            temperature: TemperatureDomain
         ): T
 
         fun mapError(message: String): T
@@ -16,7 +16,7 @@ interface WeatherDomain {
 
     data class Success(
         private val city: String,
-        private val temperature: Double
+        private val temperature: TemperatureDomain
     ) : WeatherDomain {
 
         override fun <T : Any> map(mapper: Mapper<T>) = mapper.mapSuccess(

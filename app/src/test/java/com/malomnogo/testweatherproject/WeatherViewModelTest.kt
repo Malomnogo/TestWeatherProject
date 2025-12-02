@@ -1,8 +1,11 @@
 package com.malomnogo.testweatherproject
 
+import com.malomnogo.domain.TemperatureDomain
 import com.malomnogo.domain.WeatherDomain
 import com.malomnogo.domain.WeatherRepository
 import com.malomnogo.presentation.core.FormatWeather
+import com.malomnogo.presentation.weather.BaseTemperatureMapper
+import com.malomnogo.presentation.weather.BaseWeatherDomainToUiMapper
 import com.malomnogo.presentation.weather.WeatherUiObservable
 import com.malomnogo.presentation.weather.UpdateWeatherUi
 import com.malomnogo.presentation.weather.WeatherUiState
@@ -26,19 +29,9 @@ class WeatherViewModelTest {
         uiObservable = FakeWeatherUiObservable(order)
         repository = FakeRepository(order)
         val formatter = FormatWeather.Base()
-        val mapper = object : WeatherDomain.Mapper<WeatherUiState> {
-            override fun mapSuccess(
-                city: String,
-                temperature: Double
-            ) = WeatherUiState.Success(
-                city = city,
-                temperature = formatter.formatWeather(temperature)
-            )
-
-            override fun mapError(message: String) = WeatherUiState.Error(
-                message = message
-            )
-        }
+        val mapper = BaseWeatherDomainToUiMapper(
+            temperatureMapper = BaseTemperatureMapper(formatWeather = formatter)
+        )
         viewModel = WeatherViewModel(
             runAsync = runAsync,
             uiObservable = uiObservable,
@@ -51,7 +44,7 @@ class WeatherViewModelTest {
     fun testFirstRun() {
         repository.result = WeatherDomain.Success(
             city = "Moscow",
-            temperature = 30.0
+            temperature = TemperatureDomain.Success(temperature = 30.0)
         )
         viewModel.init(isFirstOpen = true)
         assertEquals(listOf(WeatherUiState.Progress), uiObservable.states)
@@ -176,7 +169,7 @@ class WeatherViewModelTest {
 
         repository.result = WeatherDomain.Success(
             city = "Moscow",
-            temperature = 30.0
+            temperature = TemperatureDomain.Success(temperature = 30.0)
         )
         viewModel.load()
 
