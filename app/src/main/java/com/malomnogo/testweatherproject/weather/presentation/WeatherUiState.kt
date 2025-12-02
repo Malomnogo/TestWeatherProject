@@ -9,7 +9,7 @@ interface WeatherUiState {
     fun update(
         progressBar: ChangeVisibility,
         errorView: ShowError,
-        weatherLayout: ShowWeather,
+        weatherLayout: ShowWeather
     )
 
     abstract class Abstract(
@@ -18,7 +18,7 @@ interface WeatherUiState {
         private val weatherVisibility: Boolean = false,
         private val city: String = "",
         private val temperature: String = "",
-        private val errorMessage: String = "",
+        private val errorMessage: String = ""
     ) : WeatherUiState {
 
         override fun update(
@@ -28,15 +28,15 @@ interface WeatherUiState {
         ) {
             progressBar.change(progressVisibility)
             errorView.change(errorVisibility)
+            
+            if (weatherVisibility && city.isNotEmpty() && temperature.isNotEmpty()) {
+                weatherLayout.showCity(city)
+                weatherLayout.showTemperature(temperature)
+            }
             weatherLayout.change(weatherVisibility)
 
             if (errorVisibility && errorMessage.isNotEmpty()) {
                 errorView.showError(errorMessage)
-            }
-
-            if (weatherVisibility && city.isNotEmpty() && temperature.isNotEmpty()) {
-                weatherLayout.showCity(city)
-                weatherLayout.showTemperature(temperature)
             }
         }
     }
