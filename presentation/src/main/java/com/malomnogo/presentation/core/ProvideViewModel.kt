@@ -1,4 +1,4 @@
-package com.malomnogo.testweatherproject.weather.presentation.core
+package com.malomnogo.presentation.core
 
 import androidx.lifecycle.ViewModel
 

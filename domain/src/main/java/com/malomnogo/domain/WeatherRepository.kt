@@ -1,4 +1,4 @@
-package com.malomnogo.testweatherproject.weather.domain
+package com.malomnogo.domain
 
 interface WeatherRepository {
 

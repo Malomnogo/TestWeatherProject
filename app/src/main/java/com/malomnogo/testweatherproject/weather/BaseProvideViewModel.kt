@@ -1,8 +1,8 @@
 package com.malomnogo.testweatherproject.weather
 
 import androidx.lifecycle.ViewModel
+import com.malomnogo.presentation.core.ProvideViewModel
 import com.malomnogo.testweatherproject.weather.modules.ProvideModule
-import com.malomnogo.testweatherproject.weather.presentation.core.ProvideViewModel
 
 class BaseProvideViewModel(private val provideModule: ProvideModule) : ProvideViewModel {
 

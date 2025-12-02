@@ -1,10 +1,10 @@
 package com.malomnogo.testweatherproject.weather.modules
 
-import com.malomnogo.testweatherproject.weather.data.MockWeatherRepository
-import com.malomnogo.testweatherproject.weather.presentation.BaseWeatherDomainToUiMapper
-import com.malomnogo.testweatherproject.weather.presentation.FormatWeather
-import com.malomnogo.testweatherproject.weather.presentation.UiObservable
-import com.malomnogo.testweatherproject.weather.presentation.WeatherViewModel
+import com.malomnogo.data.MockWeatherRepository
+import com.malomnogo.presentation.weather.BaseWeatherDomainToUiMapper
+import com.malomnogo.presentation.core.FormatWeather
+import com.malomnogo.presentation.weather.WeatherUiObservable
+import com.malomnogo.presentation.weather.WeatherViewModel
 
 class WeatherModule(
     private val core: Core
@@ -12,7 +12,7 @@ class WeatherModule(
 
     override fun viewModel() = WeatherViewModel(
         runAsync = core.provideRunAsync(),
-        uiObservable = UiObservable.Base(),
+        uiObservable = WeatherUiObservable.Base(),
         repository = MockWeatherRepository(),
         mapper = BaseWeatherDomainToUiMapper(formatWeather = FormatWeather.Base())
     )

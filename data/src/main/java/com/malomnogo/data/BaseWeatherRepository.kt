@@ -1,8 +1,7 @@
-package com.malomnogo.testweatherproject.weather.data
+package com.malomnogo.data
 
-import com.malomnogo.testweatherproject.weather.domain.WeatherDomain
-import com.malomnogo.testweatherproject.weather.domain.WeatherRepository
-import kotlinx.coroutines.delay
+import com.malomnogo.domain.WeatherDomain
+import com.malomnogo.domain.WeatherRepository
 
 class MockWeatherRepository : WeatherRepository {
 

@@ -1,6 +1,6 @@
 package com.malomnogo.testweatherproject.weather.modules
 
-import com.malomnogo.testweatherproject.weather.presentation.core.RunAsync
+import com.malomnogo.presentation.core.RunAsync
 import kotlinx.coroutines.Dispatchers
 
 interface Core {
