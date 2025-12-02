@@ -30,14 +30,20 @@ class WeatherLayout @JvmOverloads constructor(
 
         cityTextView = AppCompatTextView(context).apply {
             id = R.id.cityTextView
-            TextViewCompat.setTextAppearance(this, MaterialR.style.TextAppearance_MaterialComponents_Headline5)
+            TextViewCompat.setTextAppearance(
+                this,
+                MaterialR.style.TextAppearance_MaterialComponents_Headline6
+            )
             setTextColor(ContextCompat.getColor(context, R.color.black))
             gravity = Gravity.CENTER
         }
 
         currentTemperatureTextView = AppCompatTextView(context).apply {
             id = R.id.currentTemperatureTextView
-            TextViewCompat.setTextAppearance(this, MaterialR.style.TextAppearance_MaterialComponents_Headline1)
+            TextViewCompat.setTextAppearance(
+                this,
+                MaterialR.style.TextAppearance_MaterialComponents_Headline3
+            )
             setTextColor(ContextCompat.getColor(context, R.color.black))
             gravity = Gravity.CENTER
         }
@@ -62,11 +68,11 @@ class WeatherLayout @JvmOverloads constructor(
         this.visibility = if (visible) VISIBLE else GONE
     }
 
-    fun showCity(city: String) {
+    override fun showCity(city: String) {
         cityTextView.text = city
     }
 
-    fun showTemperature(temperature: String) {
+    override fun showTemperature(temperature: String) {
         currentTemperatureTextView.text = temperature
     }
 }

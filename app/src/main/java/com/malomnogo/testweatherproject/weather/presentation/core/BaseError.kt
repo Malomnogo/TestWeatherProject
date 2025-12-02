@@ -5,6 +5,7 @@ import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.core.widget.TextViewCompat
 import com.google.android.material.R as MaterialR
@@ -17,7 +18,7 @@ class BaseError @JvmOverloads constructor(
 ) : LinearLayout(context, attrs, defStyleAttr), ShowError {
 
     private val errorTextView: ColorfulTextView
-    val retryButton: RetryButton
+    private val retryButton: RetryButton
 
     init {
         id = R.id.error
@@ -28,11 +29,22 @@ class BaseError @JvmOverloads constructor(
 
         errorTextView = ColorfulTextView(context).apply {
             id = R.id.errorTextView
-            TextViewCompat.setTextAppearance(this, MaterialR.style.TextAppearance_MaterialComponents_Body1)
+            TextViewCompat.setTextAppearance(
+                this,
+                MaterialR.style.TextAppearance_MaterialComponents_Body1
+            )
             gravity = Gravity.CENTER
         }
 
-        retryButton = RetryButton(context)
+        retryButton = RetryButton(context).apply {
+            layoutParams = LayoutParams(
+                LayoutParams.MATCH_PARENT,
+                LayoutParams.WRAP_CONTENT
+            ).apply {
+                val horizontalMargin = resources.getDimensionPixelSize(R.dimen.big_padding)
+                setMargins(horizontalMargin, 0, horizontalMargin, 0)
+            }
+        }
 
         addView(errorTextView)
         addView(retryButton)
@@ -54,8 +66,12 @@ class BaseError @JvmOverloads constructor(
         this.visibility = if (visible) VISIBLE else GONE
     }
 
-    fun showError(message: String) {
+    override fun showError(message: String) {
         errorTextView.show(message)
         errorTextView.showRed()
+    }
+
+    fun setOnClickListener(action: () -> Unit) {
+        retryButton.setOnClickListener { action.invoke() }
     }
 }

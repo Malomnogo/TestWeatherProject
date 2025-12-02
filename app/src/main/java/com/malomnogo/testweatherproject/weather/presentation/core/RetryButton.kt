@@ -3,23 +3,30 @@ package com.malomnogo.testweatherproject.weather.presentation.core
 import android.content.Context
 import android.os.Parcelable
 import android.util.AttributeSet
-import androidx.appcompat.widget.AppCompatButton
+import com.google.android.material.button.MaterialButton
+import com.malomnogo.testweatherproject.R
 
-class RetryButton @JvmOverloads constructor(
-    context: Context,
-    attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0,
-) : AppCompatButton(context, attrs, defStyleAttr) {
+class RetryButton : MaterialButton {
+
+    constructor(context: Context) : super(context)
+    constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
+    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(
+        context,
+        attrs,
+        defStyleAttr
+    )
 
     init {
-        id = com.malomnogo.testweatherproject.R.id.retryButton
-        text = "Retry"
+        id = R.id.retryButton
+        text = context.getString(R.string.retry)
     }
 
-    override fun onSaveInstanceState(): Parcelable? = super.onSaveInstanceState()?.let {
-        val visibilityState = VisibilityState(it)
-        visibilityState.save(this)
-        return visibilityState
+    override fun onSaveInstanceState(): Parcelable {
+        super.onSaveInstanceState().let {
+            val visibilityState = VisibilityState(it)
+            visibilityState.save(this)
+            return visibilityState
+        }
     }
 
     override fun onRestoreInstanceState(state: Parcelable?) {
