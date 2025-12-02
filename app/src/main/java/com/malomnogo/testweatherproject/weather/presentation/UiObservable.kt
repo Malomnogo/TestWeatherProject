@@ -6,11 +6,11 @@ interface UiObservable : UpdateUi, UpdateObserver {
 
     class Base : UiObservable {
 
-        private var cache: WeatherUiState = WeatherUiState.Empty
+        private var cache: WeatherUiState = WeatherUiState.Initial
         private var observer: UpdateUi = UpdateUi.Empty
 
         override fun clear() {
-            cache = WeatherUiState.Empty
+            cache = WeatherUiState.Initial
         }
 
         override fun updateUi(uiState: WeatherUiState) {

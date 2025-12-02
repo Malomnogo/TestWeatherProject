@@ -2,6 +2,7 @@ package com.malomnogo.testweatherproject
 
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.malomnogo.testweatherproject.weather.presentation.core.MainActivity
 import com.malomnogo.testweatherproject.error.ErrorPage
 import com.malomnogo.testweatherproject.progress.ProgressPage
 import com.malomnogo.testweatherproject.weather.WeatherPage

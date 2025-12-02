@@ -1,4 +1,4 @@
-package com.malomnogo.testweatherproject.core
+package com.malomnogo.testweatherproject.weather.presentation.core
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope

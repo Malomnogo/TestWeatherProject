@@ -1,46 +1,63 @@
 package com.malomnogo.testweatherproject.weather.presentation
 
+import com.malomnogo.testweatherproject.weather.presentation.core.ChangeVisibility
+import com.malomnogo.testweatherproject.weather.presentation.core.ShowError
+import com.malomnogo.testweatherproject.weather.presentation.core.ShowWeather
+
 interface WeatherUiState {
 
-    fun update()
+    fun update(
+        progressBar: ChangeVisibility,
+        errorView: ShowError,
+        weatherLayout: ShowWeather,
+    )
 
-    data object Initial : WeatherUiState {
+    abstract class Abstract(
+        private val progressVisibility: Boolean = false,
+        private val errorVisibility: Boolean = false,
+        private val weatherVisibility: Boolean = false,
+        private val city: String = "",
+        private val temperature: String = "",
+        private val errorMessage: String = "",
+    ) : WeatherUiState {
 
-        override fun update() {
-            //todo
+        override fun update(
+            progressBar: ChangeVisibility,
+            errorView: ShowError,
+            weatherLayout: ShowWeather,
+        ) {
+            progressBar.change(progressVisibility)
+            errorView.change(errorVisibility)
+            weatherLayout.change(weatherVisibility)
+
+            if (errorVisibility && errorMessage.isNotEmpty()) {
+                errorView.showError(errorMessage)
+            }
+
+            if (weatherVisibility && city.isNotEmpty() && temperature.isNotEmpty()) {
+                weatherLayout.showCity(city)
+                weatherLayout.showTemperature(temperature)
+            }
         }
     }
 
-    data object Progress : WeatherUiState {
+    data object Initial : Abstract()
 
-        override fun update() {
-            //todo
-        }
-    }
+    data object Progress : Abstract(progressVisibility = true)
 
     data class Success(
         private val city: String,
         private val temperature: String
-    ) : WeatherUiState {
-
-        override fun update() {
-            //todo
-        }
-    }
+    ) : Abstract(
+        weatherVisibility = true,
+        city = city,
+        temperature = temperature
+    )
 
     data class Error(
         private val message: String
-    ) : WeatherUiState {
-
-        override fun update() {
-            //todo
-        }
-    }
-
-    data object Empty : WeatherUiState {
-
-        override fun update() {
-            //todo
-        }
-    }
+    ) : Abstract(
+        errorVisibility = true,
+        errorMessage = message
+    )
 }
