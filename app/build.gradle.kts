@@ -34,7 +34,7 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "com.malomnogo.testweatherproject.TestRunner"
 
         buildConfigField(
             "String",
@@ -43,7 +43,23 @@ android {
         )
     }
 
+    flavorDimensions += "environment"
+
+    productFlavors {
+        create("real") {
+            dimension = "environment"
+            isDefault = true
+        }
+
+        create("mock") {
+            dimension = "environment"
+            applicationIdSuffix = ".mock"
+        }
+    }
+
     buildTypes {
+        debug {
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(
@@ -51,6 +67,10 @@ android {
                 "proguard-rules.pro"
             )
         }
+    }
+
+    testOptions {
+        animationsDisabled = true
     }
 }
 
@@ -62,4 +82,12 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+}
+
+afterEvaluate {
+    tasks.register("testWithMocks") {
+        group = "verification"
+        description = "Runs UI tests with mockDebug variant (automatically uses mocks)"
+        dependsOn("connectedMockDebugAndroidTest")
+    }
 }
