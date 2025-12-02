@@ -1,6 +1,6 @@
 package com.malomnogo.testweatherproject
 
-import com.malomnogo.testweatherproject.core.RunAsync
+import com.malomnogo.testweatherproject.weather.presentation.core.RunAsync
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.runBlocking
 

@@ -9,7 +9,11 @@ import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withParent
 import androidx.test.espresso.matcher.ViewMatchers.withText
+import com.malomnogo.testweatherproject.R
 import com.malomnogo.testweatherproject.core.ColorMatcher
+import com.malomnogo.testweatherproject.weather.presentation.core.BaseError
+import com.malomnogo.testweatherproject.weather.presentation.core.ColorfulTextView
+import com.malomnogo.testweatherproject.weather.presentation.core.RetryButton
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.not
 

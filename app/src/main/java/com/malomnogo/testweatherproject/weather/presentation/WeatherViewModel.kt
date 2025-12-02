@@ -2,7 +2,7 @@ package com.malomnogo.testweatherproject.weather.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.malomnogo.testweatherproject.core.RunAsync
+import com.malomnogo.testweatherproject.weather.presentation.core.RunAsync
 import com.malomnogo.testweatherproject.weather.domain.WeatherDomain
 import com.malomnogo.testweatherproject.weather.domain.WeatherRepository
 
@@ -14,9 +14,7 @@ class WeatherViewModel(
 ) : ViewModel() {
 
     fun init(isFirstOpen: Boolean) {
-        if (isFirstOpen) {
-            uiObservable.updateUi(WeatherUiState.Initial)
-        }
+        if (isFirstOpen) load()
     }
 
     fun load() {

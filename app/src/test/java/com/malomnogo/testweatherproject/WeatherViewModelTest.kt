@@ -49,50 +49,11 @@ class WeatherViewModelTest {
 
     @Test
     fun testFirstRun() {
-        viewModel.init(isFirstOpen = true)
-        assertEquals(listOf(WeatherUiState.Initial), uiObservable.states)
-        assertEquals(Order(mutableListOf(OBSERVABLE_UPDATE)), order)
-
-        val uiCallback = object : UpdateUi {
-            override fun updateUi(uiState: WeatherUiState) = Unit
-        }
-        viewModel.startGettingUpdates(uiCallback)
-        assertEquals(listOf(uiCallback), uiObservable.observers)
-        assertEquals(
-            Order(
-                mutableListOf(OBSERVABLE_UPDATE, OBSERVABLE_UPDATE_OBSERVER, OBSERVABLE_UPDATE)
-            ), order
-        )
-
-        viewModel.stopGettingUpdates()
-        assertEquals(
-            listOf(uiCallback, UpdateUi.Empty),
-            uiObservable.observers
-        )
-        assertEquals(
-            Order(
-                mutableListOf(
-                    OBSERVABLE_UPDATE, OBSERVABLE_UPDATE_OBSERVER, OBSERVABLE_UPDATE,
-                    OBSERVABLE_UPDATE_OBSERVER, OBSERVABLE_UPDATE
-                )
-            ), order
-        )
-    }
-
-    @Test
-    fun testNotFirstRun() {
-        viewModel.init(isFirstOpen = false)
-        assertEquals(emptyList<WeatherUiState>(), uiObservable.states)
-        assertEquals(Order(), order)
-    }
-
-    @Test
-    fun testSuccess() {
         repository.result = WeatherDomain.Success(
             city = "Moscow",
             temperature = 30.0
         )
-        viewModel.load()
+        viewModel.init(isFirstOpen = true)
         assertEquals(listOf(WeatherUiState.Progress), uiObservable.states)
         assertEquals(
             Order(
@@ -108,17 +69,47 @@ class WeatherViewModelTest {
                     city = "Moscow",
                     temperature = "30°C"
                 )
-            ), uiObservable.states
+            ),
+            uiObservable.states
         )
 
+        val uiCallback = object : UpdateUi {
+            override fun updateUi(uiState: WeatherUiState) = Unit
+        }
+        viewModel.startGettingUpdates(uiCallback)
+        assertEquals(listOf(uiCallback), uiObservable.observers)
         assertEquals(
             Order(
                 mutableListOf(
                     OBSERVABLE_UPDATE, RUN_ASYNC_BACKGROUND, REPOSITORY_LOAD_DATA,
-                    RUN_ASYNC_UI, OBSERVABLE_UPDATE
-                ),
+                    RUN_ASYNC_UI, OBSERVABLE_UPDATE,
+                    OBSERVABLE_UPDATE_OBSERVER, OBSERVABLE_UPDATE
+                )
             ), order
         )
+
+        viewModel.stopGettingUpdates()
+        assertEquals(
+            listOf(uiCallback, UpdateUi.Empty),
+            uiObservable.observers
+        )
+        assertEquals(
+            Order(
+                mutableListOf(
+                    OBSERVABLE_UPDATE, RUN_ASYNC_BACKGROUND, REPOSITORY_LOAD_DATA,
+                    RUN_ASYNC_UI, OBSERVABLE_UPDATE,
+                    OBSERVABLE_UPDATE_OBSERVER, OBSERVABLE_UPDATE,
+                    OBSERVABLE_UPDATE_OBSERVER, OBSERVABLE_UPDATE
+                )
+            ), order
+        )
+    }
+
+    @Test
+    fun testNotFirstRun() {
+        viewModel.init(isFirstOpen = false)
+        assertEquals(emptyList<WeatherUiState>(), uiObservable.states)
+        assertEquals(Order(), order)
     }
 
     @Test
