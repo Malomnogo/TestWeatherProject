@@ -10,7 +10,6 @@ class MockWeatherRepository : WeatherRepository {
 
     override suspend fun loadData(): WeatherDomain {
         attempts++
-        delay(1000)
         return if (attempts < 2) {
             WeatherDomain.Error(message = "No internet connection")
         } else {
