@@ -12,14 +12,14 @@ class TemperatureCloudRemoteMapperTest {
 
     private lateinit var order: Order
     private lateinit var fakeProvideResources: FakeProvideResources
-    private lateinit var mapper: TemperatureCloudRemoteMapper.ToDomain
+    private lateinit var mapper: TemperatureCloudMapper.ToDomain
 
     @Before
     fun setup() {
         order = Order()
         fakeProvideResources = FakeProvideResources(order)
         fakeProvideResources.serviceSentUnknownDataResult = "Unknown temperature"
-        mapper = TemperatureCloudRemoteMapper.ToDomain(
+        mapper = TemperatureCloudMapper.ToDomain(
             provideResources = fakeProvideResources
         )
     }

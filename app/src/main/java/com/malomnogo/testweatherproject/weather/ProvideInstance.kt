@@ -5,7 +5,7 @@ import com.malomnogo.data.core.ProvideApiKey
 import com.malomnogo.data.core.ProvideResources
 import com.malomnogo.data.weather.BaseWeatherRepository
 import com.malomnogo.data.weather.cloud.WeatherCloudDataSource
-import com.malomnogo.data.weather.cloud.model.core.WeatherCloudRemoteMapper
+import com.malomnogo.data.weather.cloud.model.core.WeatherCloudMapper
 import com.malomnogo.domain.TemperatureDomain
 import com.malomnogo.domain.WeatherDomain
 import com.malomnogo.domain.WeatherRepository
@@ -16,7 +16,7 @@ interface ProvideInstance {
         cloudDataSource: WeatherCloudDataSource,
         handleError: HandleError,
         provideResources: ProvideResources,
-        weatherMapper: WeatherCloudRemoteMapper<WeatherDomain>
+        weatherMapper: WeatherCloudMapper<WeatherDomain>
     ): WeatherRepository
 
     fun provideApiKey(): ProvideApiKey
@@ -27,7 +27,7 @@ interface ProvideInstance {
             cloudDataSource: WeatherCloudDataSource,
             handleError: HandleError,
             provideResources: ProvideResources,
-            weatherMapper: WeatherCloudRemoteMapper<WeatherDomain>
+            weatherMapper: WeatherCloudMapper<WeatherDomain>
         ): WeatherRepository {
 
             return BaseWeatherRepository(
@@ -46,7 +46,7 @@ interface ProvideInstance {
             cloudDataSource: WeatherCloudDataSource,
             handleError: HandleError,
             provideResources: ProvideResources,
-            weatherMapper: WeatherCloudRemoteMapper<WeatherDomain>
+            weatherMapper: WeatherCloudMapper<WeatherDomain>
         ) = MockWeatherRepository()
 
         override fun provideApiKey() = MockProvideApiKey()

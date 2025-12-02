@@ -1,9 +1,9 @@
 package com.malomnogo.testweatherproject.weather.modules
 
 import com.malomnogo.data.weather.cloud.WeatherCloudDataSource
-import com.malomnogo.data.weather.cloud.model.core.WeatherCloudRemoteMapper
+import com.malomnogo.data.weather.cloud.model.core.WeatherCloudMapper
 import com.malomnogo.data.weather.cloud.model.location.LocationCloudRemoteMapper
-import com.malomnogo.data.weather.cloud.model.temperature.TemperatureCloudRemoteMapper
+import com.malomnogo.data.weather.cloud.model.temperature.TemperatureCloudMapper
 import com.malomnogo.presentation.weather.BaseWeatherDomainToUiMapper
 import com.malomnogo.presentation.core.FormatWeather
 import com.malomnogo.presentation.weather.BaseTemperatureMapper
@@ -28,9 +28,9 @@ class WeatherModule(
                 ),
                 handleError = core.provideHandleError(),
                 provideResources = provideResources,
-                weatherMapper = WeatherCloudRemoteMapper.ToDomain(
+                weatherMapper = WeatherCloudMapper.ToDomain(
                     locationRemoteMapper = LocationCloudRemoteMapper.ToDomain(provideResources),
-                    temperatureCloudRemoteMapper = TemperatureCloudRemoteMapper.ToDomain(
+                    temperatureCloudMapper = TemperatureCloudMapper.ToDomain(
                         provideResources
                     ),
                     provideResources = provideResources

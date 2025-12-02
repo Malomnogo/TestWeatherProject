@@ -4,8 +4,8 @@ import com.malomnogo.data.FakeProvideResources
 import com.malomnogo.data.Order
 import com.malomnogo.data.weather.cloud.model.location.LocationCloud
 import com.malomnogo.data.weather.cloud.model.location.LocationCloudRemoteMapper
-import com.malomnogo.data.weather.cloud.model.temperature.TemperatureCloud
-import com.malomnogo.data.weather.cloud.model.temperature.TemperatureCloudRemoteMapper
+import com.malomnogo.data.weather.cloud.model.temperature.CurrentTemperatureCloud
+import com.malomnogo.data.weather.cloud.model.temperature.TemperatureCloudMapper
 import com.malomnogo.data.PROVIDE_RESOURCES_SERVICE_SENT_UNKNOWN_DATA
 import com.malomnogo.domain.TemperatureDomain
 import com.malomnogo.domain.WeatherDomain
@@ -21,8 +21,8 @@ class WeatherCloudRemoteMapperTest {
     private lateinit var order: Order
     private lateinit var fakeProvideResources: FakeProvideResources
     private lateinit var fakeLocationMapper: FakeLocationCloudRemoteMapper
-    private lateinit var fakeTemperatureMapper: FakeTemperatureCloudRemoteMapper
-    private lateinit var mapper: WeatherCloudRemoteMapper.ToDomain
+    private lateinit var fakeTemperatureMapper: FakeTemperatureCloudMapper
+    private lateinit var mapper: WeatherCloudMapper.ToDomain
 
     @Before
     fun setup() {
@@ -30,10 +30,10 @@ class WeatherCloudRemoteMapperTest {
         fakeProvideResources = FakeProvideResources(order)
         fakeProvideResources.serviceSentUnknownDataResult = "Unknown data"
         fakeLocationMapper = FakeLocationCloudRemoteMapper(order)
-        fakeTemperatureMapper = FakeTemperatureCloudRemoteMapper(order)
-        mapper = WeatherCloudRemoteMapper.ToDomain(
+        fakeTemperatureMapper = FakeTemperatureCloudMapper(order)
+        mapper = WeatherCloudMapper.ToDomain(
             locationRemoteMapper = fakeLocationMapper,
-            temperatureCloudRemoteMapper = fakeTemperatureMapper,
+            temperatureCloudMapper = fakeTemperatureMapper,
             provideResources = fakeProvideResources
         )
     }
@@ -45,7 +45,7 @@ class WeatherCloudRemoteMapperTest {
 
         val result = mapper.map(
             location = LocationCloud(name = "Moscow"),
-            current = TemperatureCloud(tempC = 30.0)
+            current = CurrentTemperatureCloud(tempC = 30.0)
         )
 
         assert(result is WeatherDomain.Success)
@@ -78,7 +78,7 @@ class WeatherCloudRemoteMapperTest {
         fakeTemperatureMapper.result = TemperatureDomain.Success(temperature = 30.0)
         val result = mapper.map(
             location = null,
-            current = TemperatureCloud(tempC = 30.0)
+            current = CurrentTemperatureCloud(tempC = 30.0)
         )
 
         assertEquals(
@@ -151,9 +151,9 @@ private class FakeLocationCloudRemoteMapper(
     }
 }
 
-private class FakeTemperatureCloudRemoteMapper(
+private class FakeTemperatureCloudMapper(
     private val order: Order
-) : TemperatureCloudRemoteMapper<TemperatureDomain> {
+) : TemperatureCloudMapper<TemperatureDomain> {
 
     var result: TemperatureDomain = TemperatureDomain.Error(message = "")
 
