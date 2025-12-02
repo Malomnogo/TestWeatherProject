@@ -7,8 +7,8 @@ import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withParent
-import com.malomnogo.testweatherproject.R
-import com.malomnogo.testweatherproject.weather.presentation.core.CustomProgressBar
+import com.malomnogo.presentation.R
+import com.malomnogo.presentation.core.views.CustomProgressBar
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.not
 

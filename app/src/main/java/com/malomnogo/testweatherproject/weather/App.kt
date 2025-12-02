@@ -2,9 +2,9 @@ package com.malomnogo.testweatherproject.weather
 
 import android.app.Application
 import androidx.lifecycle.ViewModel
+import com.malomnogo.presentation.core.ProvideViewModel
 import com.malomnogo.testweatherproject.weather.modules.Core
 import com.malomnogo.testweatherproject.weather.modules.ProvideModule
-import com.malomnogo.testweatherproject.weather.presentation.core.ProvideViewModel
 
 class App : Application(), ProvideViewModel {
 

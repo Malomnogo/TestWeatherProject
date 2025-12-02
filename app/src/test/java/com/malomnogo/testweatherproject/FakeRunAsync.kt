@@ -1,6 +1,6 @@
 package com.malomnogo.testweatherproject
 
-import com.malomnogo.testweatherproject.weather.presentation.core.RunAsync
+import com.malomnogo.presentation.core.RunAsync
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.runBlocking
 
@@ -26,3 +26,4 @@ class FakeRunAsync(private val order: Order) : RunAsync {
         cachedUiBlock = uiBlock as (Any) -> Unit
     }
 }
+

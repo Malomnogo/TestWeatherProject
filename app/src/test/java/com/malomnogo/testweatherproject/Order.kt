@@ -6,3 +6,4 @@ data class Order(private val list: MutableList<String> = mutableListOf()) {
         list.add(name)
     }
 }
+

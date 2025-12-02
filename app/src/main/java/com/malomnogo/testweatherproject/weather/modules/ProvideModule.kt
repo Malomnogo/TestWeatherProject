@@ -1,7 +1,7 @@
 package com.malomnogo.testweatherproject.weather.modules
 
 import androidx.lifecycle.ViewModel
-import com.malomnogo.testweatherproject.weather.presentation.WeatherViewModel
+import com.malomnogo.presentation.weather.WeatherViewModel
 
 interface ProvideModule {
 
