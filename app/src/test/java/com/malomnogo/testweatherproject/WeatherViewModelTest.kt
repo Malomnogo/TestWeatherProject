@@ -2,8 +2,10 @@ package com.malomnogo.testweatherproject
 
 import com.malomnogo.testweatherproject.weather.domain.WeatherDomain
 import com.malomnogo.testweatherproject.weather.domain.WeatherRepository
+import com.malomnogo.testweatherproject.weather.presentation.FormatWeather
 import com.malomnogo.testweatherproject.weather.presentation.UiObservable
 import com.malomnogo.testweatherproject.weather.presentation.UpdateUi
+import com.malomnogo.testweatherproject.weather.presentation.WeatherUiState
 import com.malomnogo.testweatherproject.weather.presentation.WeatherViewModel
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -23,14 +25,14 @@ class WeatherViewModelTest {
         runAsync = FakeRunAsync(order)
         uiObservable = FakeUiObservable(order)
         repository = FakeRepository(order)
+        val formatter = FormatWeather.Base()
         val mapper = object : WeatherDomain.Mapper<WeatherUiState> {
-
             override fun mapSuccess(
                 city: String,
                 temperature: Double
             ) = WeatherUiState.Success(
                 city = city,
-                temperature = temperature
+                temperature = formatter.formatWeather(temperature)
             )
 
             override fun mapError(message: String) = WeatherUiState.Error(
@@ -101,10 +103,10 @@ class WeatherViewModelTest {
         runAsync.returnResult()
         assertEquals(
             listOf(
-                WeatherDomain.Progress,
-                WeatherDomain.Success(
+                WeatherUiState.Progress,
+                WeatherUiState.Success(
                     city = "Moscow",
-                    temperature = 30.0
+                    temperature = "30°C"
                 )
             ), uiObservable.states
         )
@@ -213,9 +215,9 @@ class WeatherViewModelTest {
                 WeatherUiState.Progress,
                 WeatherUiState.Error("No internet connection"),
                 WeatherUiState.Progress,
-                WeatherDomain.Success(
+                WeatherUiState.Success(
                     city = "Moscow",
-                    temperature = 30.0
+                    temperature = "30°C"
                 )
             ),
             uiObservable.states
