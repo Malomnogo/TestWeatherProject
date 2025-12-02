@@ -1,4 +1,4 @@
-package com.malomnogo.presentation.core
+package com.malomnogo.presentation.core.views
 
 import android.content.Context
 import android.os.Parcel
@@ -8,7 +8,7 @@ import android.view.View
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
-import com.malomnogo.testweatherproject.R
+import com.malomnogo.presentation.R
 
 class ColorfulTextView : AppCompatTextView, ColorfulTextActions {
 
