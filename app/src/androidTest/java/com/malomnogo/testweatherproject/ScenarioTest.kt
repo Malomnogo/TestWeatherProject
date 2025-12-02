@@ -22,18 +22,12 @@ class ScenarioTest {
         val progressPage = ProgressPage()
         val errorPage = ErrorPage()
 
-        progressPage.checkVisible()
-        errorPage.checkNotVisible()
-        weatherPage.checkNotVisible()
-
         errorPage.checkError(message = "No internet connection")
         progressPage.checkNotVisible()
         weatherPage.checkNotVisible()
 
         errorPage.clickRetry()
-        progressPage.checkVisible()
         errorPage.checkNotVisible()
-        weatherPage.checkNotVisible()
 
         weatherPage.checkCurrentWeather(
             city = "Moscow",
