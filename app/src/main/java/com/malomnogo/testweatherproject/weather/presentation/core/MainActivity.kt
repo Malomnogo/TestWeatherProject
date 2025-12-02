@@ -4,13 +4,12 @@ import android.os.Bundle
 import android.view.Gravity
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
-import com.malomnogo.testweatherproject.R
+import androidx.lifecycle.ViewModel
 import com.malomnogo.testweatherproject.weather.presentation.UpdateUi
 import com.malomnogo.testweatherproject.weather.presentation.WeatherUiState
 import com.malomnogo.testweatherproject.weather.presentation.WeatherViewModel
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), ProvideViewModel {
 
     private lateinit var viewModel: WeatherViewModel
     private lateinit var uiCallBack: UpdateUi
@@ -22,6 +21,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        viewModel = viewModel(WeatherViewModel::class.java)
+
         val rootLayout = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             gravity = Gravity.CENTER
@@ -31,13 +32,10 @@ class MainActivity : AppCompatActivity() {
             )
         }
 
-        progressBar = CustomProgressBar(this).apply {
-            id = R.id.progressBar
-        }
-
-        errorView = BaseError(this)
-
+        progressBar = CustomProgressBar(this)
         weatherLayout = WeatherLayout(this)
+        errorView = BaseError(this)
+        errorView.setOnClickListener { viewModel.load() }
 
         rootLayout.addView(progressBar)
         rootLayout.addView(errorView)
@@ -45,19 +43,18 @@ class MainActivity : AppCompatActivity() {
 
         setContentView(rootLayout)
 
-        viewModel = ViewModelProvider(this)[WeatherViewModel::class.java]
-
         uiCallBack = object : UpdateUi {
             override fun updateUi(uiState: WeatherUiState) {
                 uiState.update(
-                    progressBar,
-                    errorView,
-                    weatherLayout
+                    progressBar = progressBar,
+                    errorView = errorView,
+                    weatherLayout = weatherLayout
                 )
             }
         }
 
-        viewModel.init(savedInstanceState == null)
+        viewModel.init(isFirstOpen = savedInstanceState == null)
+
     }
 
     override fun onResume() {
@@ -68,5 +65,9 @@ class MainActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         viewModel.stopGettingUpdates()
+    }
+
+    override fun <T : ViewModel> viewModel(viewModelClass: Class<T>): T {
+        return (application as ProvideViewModel).viewModel(viewModelClass)
     }
 }
