@@ -1,5 +1,12 @@
 package com.malomnogo.testweatherproject
 
+import com.malomnogo.testweatherproject.weather.domain.WeatherDomain
+import com.malomnogo.testweatherproject.weather.domain.WeatherRepository
+import com.malomnogo.testweatherproject.weather.presentation.FormatWeather
+import com.malomnogo.testweatherproject.weather.presentation.UiObservable
+import com.malomnogo.testweatherproject.weather.presentation.UpdateUi
+import com.malomnogo.testweatherproject.weather.presentation.WeatherUiState
+import com.malomnogo.testweatherproject.weather.presentation.WeatherViewModel
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -14,15 +21,29 @@ class WeatherViewModelTest {
 
     @Before
     fun setup() {
-        runAsync = FakeRunAsync()
-        uiObservable = FakeUiObservable()
-        repository = FakeRepository()
         order = Order()
+        runAsync = FakeRunAsync(order)
+        uiObservable = FakeUiObservable(order)
+        repository = FakeRepository(order)
+        val formatter = FormatWeather.Base()
+        val mapper = object : WeatherDomain.Mapper<WeatherUiState> {
+            override fun mapSuccess(
+                city: String,
+                temperature: Double
+            ) = WeatherUiState.Success(
+                city = city,
+                temperature = formatter.formatWeather(temperature)
+            )
+
+            override fun mapError(message: String) = WeatherUiState.Error(
+                message = message
+            )
+        }
         viewModel = WeatherViewModel(
             runAsync = runAsync,
             uiObservable = uiObservable,
             repository = repository,
-            order = order
+            mapper = mapper
         )
     }
 
@@ -69,7 +90,7 @@ class WeatherViewModelTest {
     fun testSuccess() {
         repository.result = WeatherDomain.Success(
             city = "Moscow",
-            temperature = "30°C"
+            temperature = 30.0
         )
         viewModel.load()
         assertEquals(listOf(WeatherUiState.Progress), uiObservable.states)
@@ -82,8 +103,8 @@ class WeatherViewModelTest {
         runAsync.returnResult()
         assertEquals(
             listOf(
-                WeatherDomain.Progress,
-                WeatherDomain.Success(
+                WeatherUiState.Progress,
+                WeatherUiState.Success(
                     city = "Moscow",
                     temperature = "30°C"
                 )
@@ -164,7 +185,7 @@ class WeatherViewModelTest {
 
         repository.result = WeatherDomain.Success(
             city = "Moscow",
-            temperature = "30°C"
+            temperature = 30.0
         )
         viewModel.load()
 
@@ -194,7 +215,7 @@ class WeatherViewModelTest {
                 WeatherUiState.Progress,
                 WeatherUiState.Error("No internet connection"),
                 WeatherUiState.Progress,
-                WeatherDomain.Success(
+                WeatherUiState.Success(
                     city = "Moscow",
                     temperature = "30°C"
                 )
@@ -216,8 +237,8 @@ class WeatherViewModelTest {
     }
 }
 
-private const val RUN_ASYNC_BACKGROUND = "RunAsync#runAsync{backgroundBlock.invoke()}"
-private const val RUN_ASYNC_UI = "RunAsync#runAsync{uiBlock.invoke(result)}"
+internal const val RUN_ASYNC_BACKGROUND = "RunAsync#runAsync{backgroundBlock.invoke()}"
+internal const val RUN_ASYNC_UI = "RunAsync#runAsync{uiBlock.invoke(result)}"
 private const val OBSERVABLE_UPDATE = "UiObservable#updateUi"
 private const val OBSERVABLE_UPDATE_OBSERVER = "UiObservable#updateObserver"
 private const val REPOSITORY_LOAD_DATA = "Repository#loadData"
@@ -240,7 +261,7 @@ private class FakeUiObservable(private val order: Order) : UiObservable {
     }
 }
 
-private class FakeRepository(private val order: Order) : Repository {
+private class FakeRepository(private val order: Order) : WeatherRepository {
 
     lateinit var result: WeatherDomain
 
