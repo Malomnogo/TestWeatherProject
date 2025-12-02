@@ -3,8 +3,8 @@ package com.malomnogo.testweatherproject
 import com.malomnogo.domain.WeatherDomain
 import com.malomnogo.domain.WeatherRepository
 import com.malomnogo.presentation.core.FormatWeather
-import com.malomnogo.presentation.core.UiObservable
-import com.malomnogo.presentation.core.UpdateUi
+import com.malomnogo.presentation.weather.WeatherUiObservable
+import com.malomnogo.presentation.weather.UpdateWeatherUi
 import com.malomnogo.presentation.weather.WeatherUiState
 import com.malomnogo.presentation.weather.WeatherViewModel
 import org.junit.Assert.assertEquals
@@ -14,7 +14,7 @@ import org.junit.Test
 class WeatherViewModelTest {
 
     private lateinit var runAsync: FakeRunAsync
-    private lateinit var uiObservable: FakeUiObservable
+    private lateinit var uiObservable: FakeWeatherUiObservable
     private lateinit var repository: FakeRepository
     private lateinit var order: Order
     private lateinit var viewModel: WeatherViewModel
@@ -23,7 +23,7 @@ class WeatherViewModelTest {
     fun setup() {
         order = Order()
         runAsync = FakeRunAsync(order)
-        uiObservable = FakeUiObservable(order)
+        uiObservable = FakeWeatherUiObservable(order)
         repository = FakeRepository(order)
         val formatter = FormatWeather.Base()
         val mapper = object : WeatherDomain.Mapper<WeatherUiState> {
@@ -73,7 +73,7 @@ class WeatherViewModelTest {
             uiObservable.states
         )
 
-        val uiCallback = object : UpdateUi {
+        val uiCallback = object : UpdateWeatherUi {
             override fun updateUi(uiState: WeatherUiState) = Unit
         }
         viewModel.startGettingUpdates(uiCallback)
@@ -90,7 +90,7 @@ class WeatherViewModelTest {
 
         viewModel.stopGettingUpdates()
         assertEquals(
-            listOf(uiCallback, UpdateUi.Empty),
+            listOf(uiCallback, UpdateWeatherUi.Empty),
             uiObservable.observers
         )
         assertEquals(
@@ -234,10 +234,10 @@ private const val OBSERVABLE_UPDATE = "UiObservable#updateUi"
 private const val OBSERVABLE_UPDATE_OBSERVER = "UiObservable#updateObserver"
 private const val REPOSITORY_LOAD_DATA = "Repository#loadData"
 
-private class FakeUiObservable(private val order: Order) : UiObservable {
+private class FakeWeatherUiObservable(private val order: Order) : WeatherUiObservable {
 
     val states = mutableListOf<WeatherUiState>()
-    val observers = mutableListOf<UpdateUi>()
+    val observers = mutableListOf<UpdateWeatherUi>()
     override fun clear() = Unit
 
     override fun updateUi(uiState: WeatherUiState) {
@@ -245,7 +245,7 @@ private class FakeUiObservable(private val order: Order) : UiObservable {
         states.add(uiState)
     }
 
-    override fun updateObserver(observer: UpdateUi) {
+    override fun updateObserver(observer: UpdateWeatherUi) {
         order.add(OBSERVABLE_UPDATE_OBSERVER)
         observers.add(observer)
         updateUi(states.last())
