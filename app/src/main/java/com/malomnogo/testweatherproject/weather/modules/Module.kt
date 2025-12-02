@@ -1,8 +1,8 @@
-package ru.easycode.waifupics.core.modules
+package com.malomnogo.testweatherproject.weather.modules
 
-import ru.easycode.presentation.main.CustomViewModel
+import androidx.lifecycle.ViewModel
 
-interface Module<T : CustomViewModel> {
+interface Module<T : ViewModel> {
 
     fun viewModel(): T
 }

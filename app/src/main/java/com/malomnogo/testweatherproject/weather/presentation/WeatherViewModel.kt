@@ -14,9 +14,7 @@ class WeatherViewModel(
 ) : ViewModel() {
 
     fun init(isFirstOpen: Boolean) {
-        if (isFirstOpen) {
-            uiObservable.updateUi(WeatherUiState.Initial)
-        }
+        if (isFirstOpen) load()
     }
 
     fun load() {
