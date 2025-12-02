@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -7,10 +9,22 @@ kotlin {
     jvmToolchain(17)
 }
 
+val secretsPropertiesFile = rootProject.file("secrets.properties")
+val secretsProperties = Properties()
+if (secretsPropertiesFile.exists()) {
+    secretsPropertiesFile.inputStream().use {
+        secretsProperties.load(it)
+    }
+}
+
 android {
     namespace = "com.malomnogo.testweatherproject"
     compileSdk {
         version = release(36)
+    }
+
+    buildFeatures {
+        buildConfig = true
     }
 
     defaultConfig {
@@ -21,6 +35,12 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField(
+            "String",
+            "WEATHER_API_KEY",
+            "\"${secretsProperties["WEATHER_API_KEY"] ?: ""}\""
+        )
     }
 
     buildTypes {

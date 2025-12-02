@@ -10,7 +10,7 @@ kotlin {
 dependencies {
     implementation(project(":domain"))
 
-    implementation(libs.retrofit)
-    implementation(libs.retrofit.converter.gson)
-    implementation(libs.okhttp.logging.interceptor)
+    api(libs.retrofit)
+    api(libs.retrofit.converter.gson)
+    api(libs.okhttp.logging.interceptor)
 }
