@@ -119,4 +119,3 @@ private fun createHourView(context: Context): LinearLayout {
 
     return layout
 }
-

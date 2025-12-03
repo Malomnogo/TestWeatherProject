@@ -8,4 +8,3 @@ interface ShowTemperature : ChangeVisibility {
 
     fun showIcon(iconUrl: String)
 }
-
