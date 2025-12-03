@@ -17,7 +17,7 @@ interface WeatherUiState {
         private val errorVisibility: Boolean = false,
         private val weatherVisibility: Boolean = false,
         private val city: String = "",
-        private val temperature: String = "",
+        private val temperature: TemperatureUiState = TemperatureUiState.Empty,
         private val errorMessage: String = ""
     ) : WeatherUiState {
 
@@ -29,7 +29,7 @@ interface WeatherUiState {
             progressBar.change(progressVisibility)
             errorView.change(errorVisibility)
 
-            if (weatherVisibility && city.isNotEmpty() && temperature.isNotEmpty()) {
+            if (weatherVisibility && city.isNotEmpty()) {
                 weatherLayout.showCity(city)
                 weatherLayout.showTemperature(temperature)
             }
@@ -47,12 +47,23 @@ interface WeatherUiState {
 
     data class Success(
         private val city: String,
-        private val temperature: String
+        private val temperature: TemperatureUiState,
+        private val forecast: ForecastUiState
     ) : Abstract(
         weatherVisibility = true,
         city = city,
         temperature = temperature
-    )
+    ) {
+
+        override fun update(
+            progressBar: ChangeVisibility,
+            errorView: ShowError,
+            weatherLayout: ShowWeather
+        ) {
+            super.update(progressBar, errorView, weatherLayout)
+            forecast.update(weatherLayout)
+        }
+    }
 
     data class Error(
         private val message: String

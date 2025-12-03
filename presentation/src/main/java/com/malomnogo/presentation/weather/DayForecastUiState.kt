@@ -1,28 +1,27 @@
 package com.malomnogo.presentation.weather
 
-import com.malomnogo.presentation.core.views.ChangeVisibility
-import com.malomnogo.presentation.weather.views.ShowDayForecast
+import com.malomnogo.presentation.weather.views.ShowDay
 
 interface DayForecastUiState {
 
-    fun update(dayForecastView: ShowDayForecast)
+    fun update(dayForecastView: ShowDay)
 
     data object Empty : DayForecastUiState {
-        override fun update(dayForecastView: ShowDayForecast) {
+
+        override fun update(dayForecastView: ShowDay) {
             dayForecastView.change(false)
         }
     }
 
     data class Base(
-        private val dailyForecast: List<DayUiState>
+        private val date: String,
+        private val temperature: DayUiState
     ) : DayForecastUiState {
 
-        override fun update(dayForecastView: ShowDayForecast) {
-            dailyForecast.forEach { dayState ->
-                dayState.update(dayForecastView)
-            }
+        override fun update(dayForecastView: ShowDay) {
+            dayForecastView.showDate(date)
+            temperature.update(dayForecastView)
             dayForecastView.change(true)
         }
     }
 }
-

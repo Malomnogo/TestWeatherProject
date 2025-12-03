@@ -1,6 +1,5 @@
 package com.malomnogo.presentation.weather
 
-import com.malomnogo.presentation.core.views.ChangeVisibility
 import com.malomnogo.presentation.weather.views.ShowTemperature
 
 interface TemperatureUiState {
@@ -8,6 +7,7 @@ interface TemperatureUiState {
     fun update(temperatureView: ShowTemperature)
 
     data object Empty : TemperatureUiState {
+
         override fun update(temperatureView: ShowTemperature) {
             temperatureView.change(false)
         }
@@ -25,4 +25,3 @@ interface TemperatureUiState {
         }
     }
 }
-

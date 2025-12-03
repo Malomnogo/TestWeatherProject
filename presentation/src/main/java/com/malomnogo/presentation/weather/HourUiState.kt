@@ -1,6 +1,5 @@
 package com.malomnogo.presentation.weather
 
-import com.malomnogo.presentation.core.views.ChangeVisibility
 import com.malomnogo.presentation.weather.views.ShowHour
 
 interface HourUiState {
@@ -8,6 +7,7 @@ interface HourUiState {
     fun update(hourView: ShowHour)
 
     data object Empty : HourUiState {
+
         override fun update(hourView: ShowHour) {
             hourView.change(false)
         }
