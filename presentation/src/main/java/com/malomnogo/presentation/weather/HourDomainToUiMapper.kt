@@ -19,4 +19,3 @@ class HourDomainToUiMapper(
 
     override fun mapError(message: String) = HourUiState.Empty
 }
-

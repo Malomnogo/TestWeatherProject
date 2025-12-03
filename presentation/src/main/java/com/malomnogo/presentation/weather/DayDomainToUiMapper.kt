@@ -14,8 +14,8 @@ class DayDomainToUiMapper(
         minTempC: Double,
         condition: ConditionDomain
     ) = DayUiState.Base(
-        maxTemperature = formatWeather.formatWeather(temperature = maxTempC),
-        minTemperature = formatWeather.formatWeather(temperature = minTempC),
+        maxTemperature = "max: ${formatWeather.formatWeather(temperature = maxTempC)}",
+        minTemperature = "min: ${formatWeather.formatWeather(temperature = minTempC)}",
         iconUrl = condition.map(conditionMapper)
     )
 
