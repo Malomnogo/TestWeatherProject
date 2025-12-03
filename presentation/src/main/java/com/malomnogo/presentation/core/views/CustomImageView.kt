@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Parcel
 import android.os.Parcelable
 import android.util.AttributeSet
-import android.view.View
 import androidx.appcompat.widget.AppCompatImageView
 import com.malomnogo.presentation.core.LoadPicEngine
 import com.malomnogo.presentation.core.ProvideLoadPicEngine
@@ -42,7 +41,7 @@ class CustomImageView @JvmOverloads constructor(
         }
     }
 
-    private class CustomImageViewSavedState : View.BaseSavedState {
+    private class CustomImageViewSavedState : BaseSavedState {
 
         private var imageUrl = ""
 
