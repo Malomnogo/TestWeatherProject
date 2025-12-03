@@ -3,6 +3,7 @@
     <item name="weatherLayout" type="id"/>
     <item name="cityTextView" type="id"/>
     <item name="currentTemperatureTextView" type="id"/>
+    <item name="currentWeatherIcon" type="id"/>
     <item name="hourlyForecastRecyclerView" type="id"/>
     <item name="dailyForecastRecyclerView" type="id"/>
     <item name="hourTimeTextView" type="id"/>
@@ -10,9 +11,11 @@
     <item name="dayDateTextView" type="id"/>
     <item name="dayMinTemperatureTextView" type="id"/>
     <item name="dayMaxTemperatureTextView" type="id"/>
+    <item name="dayIconImageView" type="id"/>
+    <item name="hourForecastTitleTextView" type="id"/>
+    <item name="dayForecastTitleTextView" type="id"/>
     <item name="error" type="id"/>
     <item name="errorTextView" type="id"/>
     <item name="retryButton" type="id"/>
     <item name="progressBar" type="id"/>
 </resources>
-
