@@ -2,6 +2,7 @@ package com.malomnogo.presentation.weather.views
 
 import android.content.Context
 import android.view.Gravity
+import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -13,13 +14,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.R as MaterialR
 import com.malomnogo.presentation.R
 import com.malomnogo.presentation.core.views.CustomImageView
-import com.malomnogo.presentation.weather.DayUiState
+import com.malomnogo.presentation.weather.DayForecastUiState
 
 class DayForecastAdapter : RecyclerView.Adapter<DayForecastAdapter.DayViewHolder>() {
 
-    private val items = mutableListOf<DayUiState>()
+    private val items = mutableListOf<DayForecastUiState>()
 
-    fun update(list: List<DayUiState>) {
+    fun update(list: List<DayForecastUiState>) {
         val diffResult = DiffUtil.calculateDiff(
             DayDiffUtilCallback(oldList = items, newList = list)
         )
@@ -40,20 +41,12 @@ class DayForecastAdapter : RecyclerView.Adapter<DayForecastAdapter.DayViewHolder
     class DayViewHolder(context: Context) : RecyclerView.ViewHolder(
         createDayView(context)
     ) {
-        private val dateTextView: TextView
-        private val maxTemperatureTextView: TextView
-        private val minTemperatureTextView: TextView
-        private val iconImageView: CustomImageView
+        private val dateTextView: TextView = itemView.findViewById(R.id.dayDateTextView)
+        private val maxTemperatureTextView: TextView = itemView.findViewById(R.id.dayMaxTemperatureTextView)
+        private val minTemperatureTextView: TextView = itemView.findViewById(R.id.dayMinTemperatureTextView)
+        private val iconImageView: CustomImageView = itemView.findViewById(R.id.dayIconImageView)
 
-        init {
-            val view = itemView as LinearLayout
-            dateTextView = view.findViewById(R.id.dayDateTextView)
-            maxTemperatureTextView = view.findViewById(R.id.dayMaxTemperatureTextView)
-            minTemperatureTextView = view.findViewById(R.id.dayMinTemperatureTextView)
-            iconImageView = view.findViewById(R.id.dayIconImageView)
-        }
-
-        fun bind(item: DayUiState) {
+        fun bind(item: DayForecastUiState) {
             item.update(object : ShowDay {
                 override fun showDate(date: String) {
                     dateTextView.text = date
@@ -72,15 +65,15 @@ class DayForecastAdapter : RecyclerView.Adapter<DayForecastAdapter.DayViewHolder
                 }
 
                 override fun change(visible: Boolean) {
-                    itemView.visibility = if (visible) android.view.View.VISIBLE else android.view.View.GONE
+                    itemView.visibility = if (visible) View.VISIBLE else View.GONE
                 }
             })
         }
     }
 
     private class DayDiffUtilCallback(
-        private val oldList: List<DayUiState>,
-        private val newList: List<DayUiState>
+        private val oldList: List<DayForecastUiState>,
+        private val newList: List<DayForecastUiState>
     ) : DiffUtil.Callback() {
 
         override fun getOldListSize() = oldList.size
@@ -97,12 +90,21 @@ class DayForecastAdapter : RecyclerView.Adapter<DayForecastAdapter.DayViewHolder
 
 private fun createDayView(context: Context): LinearLayout {
     val layout = LinearLayout(context).apply {
-        orientation = LinearLayout.HORIZONTAL
-        gravity = Gravity.CENTER_VERTICAL
+        orientation = LinearLayout.VERTICAL
+        gravity = Gravity.CENTER
         val padding = context.resources.getDimensionPixelSize(R.dimen.big_padding)
         setPadding(padding, padding, padding, padding)
         layoutParams = LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
+    }
+
+    val firstRow = LinearLayout(context).apply {
+        orientation = LinearLayout.HORIZONTAL
+        gravity = Gravity.CENTER
+        layoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.WRAP_CONTENT,
             LinearLayout.LayoutParams.WRAP_CONTENT
         )
     }
@@ -115,9 +117,8 @@ private fun createDayView(context: Context): LinearLayout {
         )
         setTextColor(ContextCompat.getColor(context, R.color.black))
         layoutParams = LinearLayout.LayoutParams(
-            0,
             ViewGroup.LayoutParams.WRAP_CONTENT,
-            1f
+            ViewGroup.LayoutParams.WRAP_CONTENT
         )
     }
 
@@ -128,9 +129,12 @@ private fun createDayView(context: Context): LinearLayout {
             context.resources.getDimensionPixelSize(R.dimen.icon_size)
         ).apply {
             val margin = context.resources.getDimensionPixelSize(R.dimen.small_padding)
-            setMargins(margin, 0, margin, 0)
+            setMargins(margin, 0, 0, 0)
         }
     }
+
+    firstRow.addView(dateTextView)
+    firstRow.addView(iconImageView)
 
     val maxTemperatureTextView = AppCompatTextView(context).apply {
         id = R.id.dayMaxTemperatureTextView
@@ -140,11 +144,11 @@ private fun createDayView(context: Context): LinearLayout {
         )
         setTextColor(ContextCompat.getColor(context, R.color.black))
         layoutParams = LinearLayout.LayoutParams(
-            ViewGroup.LayoutParams.WRAP_CONTENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
         ).apply {
             val margin = context.resources.getDimensionPixelSize(R.dimen.small_padding)
-            setMargins(margin, 0, margin, 0)
+            setMargins(0, margin, 0, 0)
         }
     }
 
@@ -156,13 +160,15 @@ private fun createDayView(context: Context): LinearLayout {
         )
         setTextColor(ContextCompat.getColor(context, R.color.black))
         layoutParams = LinearLayout.LayoutParams(
-            ViewGroup.LayoutParams.WRAP_CONTENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT
-        )
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        ).apply {
+            val margin = context.resources.getDimensionPixelSize(R.dimen.small_padding)
+            setMargins(0, margin, 0, 0)
+        }
     }
 
-    layout.addView(dateTextView)
-    layout.addView(iconImageView)
+    layout.addView(firstRow)
     layout.addView(maxTemperatureTextView)
     layout.addView(minTemperatureTextView)
 
