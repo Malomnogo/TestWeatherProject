@@ -17,4 +17,3 @@ class BaseTemperatureDomainMapper(
 
     override fun mapError(message: String) = TemperatureUiState.Empty
 }
-
