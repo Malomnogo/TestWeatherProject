@@ -34,17 +34,40 @@ class RecyclerViewMatcher(
 
         if (childView == null) {
             val recyclerView = view.rootView.findViewById<RecyclerView>(recyclerViewId)
-            if (recyclerView.id == recyclerViewId) {
-                val viewHolder = recyclerView.findViewHolderForAdapterPosition(position)
-                if (viewHolder != null) {
-                    childView = viewHolder.itemView
+            if (recyclerView.id == recyclerViewId && recyclerView.adapter != null) {
+                val adapter = recyclerView.adapter!!
+                if (position >= 0 && position < adapter.itemCount) {
+                    recyclerView.scrollToPosition(position)
+                    recyclerView.measure(0, 0)
+                    recyclerView.layout(0, 0, recyclerView.width, recyclerView.height)
+                    
+                    var viewHolder = recyclerView.findViewHolderForAdapterPosition(position)
+                    if (viewHolder == null) {
+                        recyclerView.smoothScrollToPosition(position)
+                        var attempts = 0
+                        while (viewHolder == null && attempts < 10) {
+                            try {
+                                Thread.sleep(50)
+                            } catch (e: InterruptedException) {
+                                Thread.currentThread().interrupt()
+                                break
+                            }
+                            viewHolder = recyclerView.findViewHolderForAdapterPosition(position)
+                            attempts++
+                        }
+                    }
+                    if (viewHolder != null) {
+                        childView = viewHolder.itemView
+                    }
                 }
             } else {
                 return false
             }
         }
 
-        return if (targetViewId == -1) {
+        return if (childView == null) {
+            false
+        } else if (targetViewId == -1) {
             view === childView
         } else {
             val targetView = childView!!.findViewById<View>(targetViewId)

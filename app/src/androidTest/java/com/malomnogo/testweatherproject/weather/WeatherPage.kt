@@ -1,16 +1,16 @@
 package com.malomnogo.testweatherproject.weather
 
-import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers.Visibility
 import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA
+import androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.malomnogo.presentation.R
 import com.malomnogo.testweatherproject.core.RecyclerViewMatcher
 import org.hamcrest.CoreMatchers.allOf
-import org.hamcrest.CoreMatchers.not
 
 class WeatherPage {
 
@@ -18,23 +18,23 @@ class WeatherPage {
         onView(
             allOf(
                 withId(R.id.weatherLayout),
-                isAssignableFrom(android.widget.LinearLayout::class.java),
+                isAssignableFrom(android.widget.ScrollView::class.java)
             )
-        ).check(matches(not(isDisplayed())))
+        ).check(matches(withEffectiveVisibility(Visibility.GONE)))
     }
 
     fun checkCurrentWeather(city: String, temperature: String) {
         onView(
             allOf(
                 withId(R.id.cityTextView),
-                withId(R.id.weatherLayout)
+                isDescendantOfA(withId(R.id.weatherLayout))
             )
         ).check(matches(withText(city)))
 
         onView(
             allOf(
                 withId(R.id.currentTemperatureTextView),
-                withId(R.id.weatherLayout)
+                isDescendantOfA(withId(R.id.weatherLayout))
             )
         ).check(matches(withText(temperature)))
     }

@@ -58,20 +58,20 @@ class ScenarioTest {
         weatherPage.checkDayWeather(
             position = 0,
             date = "1.12.2025",
-            minTemperature = "-1°C",
-            maxTemperature = "1°C"
+            minTemperature = "min: -1°C",
+            maxTemperature = "max: 1°C"
         )
         weatherPage.checkDayWeather(
             position = 1,
             date = "2.12.2025",
-            minTemperature = "-2°C",
-            maxTemperature = "2°C"
+            minTemperature = "min: -2°C",
+            maxTemperature = "max: 2°C"
         )
         weatherPage.checkDayWeather(
             position = 2,
             date = "3.12.2025",
-            minTemperature = "-3°C",
-            maxTemperature = "3°C"
+            minTemperature = "min: -3°C",
+            maxTemperature = "max: 3°C"
         )
         progressPage.checkNotVisible()
         errorPage.checkNotVisible()
@@ -100,20 +100,20 @@ class ScenarioTest {
         weatherPage.checkDayWeather(
             position = 0,
             date = "1.12.2025",
-            minTemperature = "-1°C",
-            maxTemperature = "1°C"
+            minTemperature = "min: -1°C",
+            maxTemperature = "max: 1°C"
         )
         weatherPage.checkDayWeather(
             position = 1,
             date = "2.12.2025",
-            minTemperature = "-2°C",
-            maxTemperature = "2°C"
+            minTemperature = "min: -2°C",
+            maxTemperature = "max: 2°C"
         )
         weatherPage.checkDayWeather(
             position = 2,
             date = "3.12.2025",
-            minTemperature = "-3°C",
-            maxTemperature = "3°C"
+            minTemperature = "min: -3°C",
+            maxTemperature = "max: 3°C"
         )
         progressPage.checkNotVisible()
         errorPage.checkNotVisible()
