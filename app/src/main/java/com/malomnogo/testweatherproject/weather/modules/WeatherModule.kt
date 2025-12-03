@@ -11,7 +11,14 @@ import com.malomnogo.data.weather.cloud.model.location.LocationCloudRemoteMapper
 import com.malomnogo.data.weather.cloud.model.temperature.TemperatureCloudMapper
 import com.malomnogo.presentation.weather.BaseWeatherDomainToUiMapper
 import com.malomnogo.presentation.core.FormatWeather
-import com.malomnogo.presentation.weather.BaseTemperatureMapper
+import com.malomnogo.presentation.core.FormatDate
+import com.malomnogo.presentation.core.FormatTime
+import com.malomnogo.presentation.weather.BaseTemperatureDomainMapper
+import com.malomnogo.presentation.weather.BaseConditionDomainMapper
+import com.malomnogo.presentation.weather.DayDomainToUiMapper
+import com.malomnogo.presentation.weather.HourDomainToUiMapper
+import com.malomnogo.presentation.weather.BaseForecastDayDomainMapper
+import com.malomnogo.presentation.weather.BaseForecastDomainToUiMapper
 import com.malomnogo.presentation.weather.WeatherUiObservable
 import com.malomnogo.presentation.weather.WeatherViewModel
 import com.malomnogo.testweatherproject.weather.ProvideInstance
@@ -55,8 +62,22 @@ class WeatherModule(
                 )
             ),
             mapper = BaseWeatherDomainToUiMapper(
-                temperatureMapper = BaseTemperatureMapper(
-                    formatWeather = FormatWeather.Base()
+                temperatureMapper = BaseTemperatureDomainMapper(
+                    formatWeather = FormatWeather.Base(),
+                    conditionMapper = BaseConditionDomainMapper()
+                ),
+                forecastMapper = BaseForecastDomainToUiMapper(
+                    forecastDayMapper = BaseForecastDayDomainMapper(
+                        formatDate = FormatDate.Base(),
+                        dayMapper = DayDomainToUiMapper(
+                            formatWeather = FormatWeather.Base(),
+                            conditionMapper = BaseConditionDomainMapper()
+                        ),
+                        hourMapper = HourDomainToUiMapper(
+                            formatTime = FormatTime.Base(),
+                            formatWeather = FormatWeather.Base()
+                        )
+                    )
                 )
             )
         )
