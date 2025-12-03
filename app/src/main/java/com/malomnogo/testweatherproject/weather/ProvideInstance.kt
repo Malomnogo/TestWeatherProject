@@ -69,41 +69,28 @@ interface ProvideInstance {
                 return if (attempts < 2) {
                     WeatherDomain.Error(message = "No internet connection")
                 } else {
-                    val hourlyForecast = listOf(
-                        HourDomain.Success(timeEpoch = 1733011200L, tempC = 0.0),
-                        HourDomain.Success(timeEpoch = 1733014800L, tempC = 1.0),
-                        HourDomain.Success(timeEpoch = 1733018400L, tempC = 2.0)
-                    )
-                    
-                    val dailyForecast = listOf(
-                        ForecastDayDomain.Success(
-                            dateEpoch = 1733011200L,
-                            day = DayDomain.Success(
-                                maxTempC = 1.0,
-                                minTempC = -1.0,
-                                conditionDomain = ConditionDomain.Success(text = "Sunny", iconUrl = "http://icon1.png")
-                            ),
-                            hour = hourlyForecast
-                        ),
-                        ForecastDayDomain.Success(
-                            dateEpoch = 1733097600L,
-                            day = DayDomain.Success(
-                                maxTempC = 2.0,
-                                minTempC = -2.0,
-                                conditionDomain = ConditionDomain.Success(text = "Cloudy", iconUrl = "http://icon2.png")
-                            ),
-                            hour = emptyList()
-                        ),
-                        ForecastDayDomain.Success(
-                            dateEpoch = 1733184000L,
-                            day = DayDomain.Success(
-                                maxTempC = 3.0,
-                                minTempC = -3.0,
-                                conditionDomain = ConditionDomain.Success(text = "Rainy", iconUrl = "http://icon3.png")
-                            ),
-                            hour = emptyList()
+                    val baseTimeEpoch = 1764536400L // 1.12.2025 00:00
+                    val hourlyForecast = (0..2).map { index ->
+                        HourDomain.Success(
+                            timeEpoch = baseTimeEpoch + index * 3600L,
+                            tempC = index.toDouble()
                         )
-                    )
+                    }
+                    
+                    val dailyForecast = (0..2).map { index ->
+                        ForecastDayDomain.Success(
+                            dateEpoch = baseTimeEpoch + index * 86400L,
+                            day = DayDomain.Success(
+                                maxTempC = (index + 1).toDouble(),
+                                minTempC = -(index + 1).toDouble(),
+                                condition = ConditionDomain.Success(
+                                    text = "Sunny",
+                                    iconUrl = "http://icon$index.png"
+                                )
+                            ),
+                            hour = if (index == 0) hourlyForecast else emptyList()
+                        )
+                    }
                     
                     WeatherDomain.Success(
                         city = "Moscow",
