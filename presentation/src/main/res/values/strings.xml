@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="forecast_by_hour">Forecast by hour</string>
+    <string name="forecast_by_3_days">Forecast by 3 days</string>
+    <string name="service_sent_unknown_data">Service sent unknown data</string>
+    <string name="no_internet_connection">No internet connection</string>
+    <string name="service_unavailable">Service unavailable</string>
+    <string name="retry">Retry</string>
+</resources>
