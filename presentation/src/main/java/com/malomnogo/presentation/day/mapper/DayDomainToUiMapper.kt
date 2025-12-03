@@ -1,8 +1,9 @@
-package com.malomnogo.presentation.weather
+package com.malomnogo.presentation.day.mapper
 
 import com.malomnogo.domain.ConditionDomain
 import com.malomnogo.domain.DayDomain
 import com.malomnogo.presentation.core.FormatWeather
+import com.malomnogo.presentation.day.DayUiState
 
 class DayDomainToUiMapper(
     private val formatWeather: FormatWeather,

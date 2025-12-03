@@ -1,8 +1,9 @@
-package com.malomnogo.presentation.weather
+package com.malomnogo.presentation.weather.mapper
 
 import com.malomnogo.domain.ForecastDayDomain
 import com.malomnogo.domain.ForecastDomain
-import com.malomnogo.presentation.core.FormatDate
+import com.malomnogo.presentation.day.ForecastDayUiState
+import com.malomnogo.presentation.weather.ForecastUiState
 
 class BaseForecastDomainToUiMapper(
     private val forecastDayMapper: ForecastDayDomain.Mapper<ForecastDayUiState>

@@ -1,11 +1,8 @@
-package com.malomnogo.presentation.weather.views
+package com.malomnogo.presentation.day
 
 import com.malomnogo.presentation.core.views.ChangeVisibility
-import com.malomnogo.presentation.weather.DayForecastUiState
 
 interface ShowDayForecast : ChangeVisibility {
-
-    fun showTitle(title: String)
 
     fun showDailyForecast(dailyForecast: List<DayForecastUiState>)
 }

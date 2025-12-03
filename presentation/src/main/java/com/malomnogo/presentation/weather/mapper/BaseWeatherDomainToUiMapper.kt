@@ -1,8 +1,11 @@
-package com.malomnogo.presentation.weather
+package com.malomnogo.presentation.weather.mapper
 
 import com.malomnogo.domain.ForecastDomain
 import com.malomnogo.domain.TemperatureDomain
 import com.malomnogo.domain.WeatherDomain
+import com.malomnogo.presentation.weather.ForecastUiState
+import com.malomnogo.presentation.weather.TemperatureUiState
+import com.malomnogo.presentation.weather.WeatherUiState
 
 class BaseWeatherDomainToUiMapper(
     private val temperatureMapper: TemperatureDomain.Mapper<TemperatureUiState>,

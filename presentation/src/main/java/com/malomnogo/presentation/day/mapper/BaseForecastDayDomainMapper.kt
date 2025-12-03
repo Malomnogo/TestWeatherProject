@@ -1,9 +1,12 @@
-package com.malomnogo.presentation.weather
+package com.malomnogo.presentation.day.mapper
 
 import com.malomnogo.domain.DayDomain
 import com.malomnogo.domain.ForecastDayDomain
 import com.malomnogo.domain.HourDomain
 import com.malomnogo.presentation.core.FormatDate
+import com.malomnogo.presentation.day.DayUiState
+import com.malomnogo.presentation.day.ForecastDayUiState
+import com.malomnogo.presentation.hour.HourUiState
 
 class BaseForecastDayDomainMapper(
     private val formatDate: FormatDate,

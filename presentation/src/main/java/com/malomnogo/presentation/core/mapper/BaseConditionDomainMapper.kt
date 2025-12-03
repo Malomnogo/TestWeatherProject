@@ -1,4 +1,4 @@
-package com.malomnogo.presentation.weather
+package com.malomnogo.presentation.core.mapper
 
 import com.malomnogo.domain.ConditionDomain
 

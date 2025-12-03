@@ -1,7 +1,8 @@
 package com.malomnogo.presentation.weather
 
-import com.malomnogo.presentation.weather.views.ShowDayForecast
-import com.malomnogo.presentation.weather.views.ShowHourForecast
+import com.malomnogo.presentation.day.ForecastDayUiState
+import com.malomnogo.presentation.day.ShowDayForecast
+import com.malomnogo.presentation.hour.ShowHourForecast
 import com.malomnogo.presentation.weather.views.ShowWeather
 
 interface ForecastUiState {

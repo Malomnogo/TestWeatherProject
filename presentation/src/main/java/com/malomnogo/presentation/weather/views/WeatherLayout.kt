@@ -18,8 +18,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.R as MaterialR
 import com.malomnogo.presentation.R
+import com.malomnogo.presentation.weather.TemperatureUiState
 import com.malomnogo.presentation.core.views.CustomImageView
 import com.malomnogo.presentation.core.views.VisibilityState
+import com.malomnogo.presentation.day.DayForecastAdapter
+import com.malomnogo.presentation.day.DayForecastUiState
+import com.malomnogo.presentation.day.ShowDayForecast
+import com.malomnogo.presentation.hour.HourForecastAdapter
+import com.malomnogo.presentation.hour.HourUiState
+import com.malomnogo.presentation.hour.ShowHourForecast
 import com.malomnogo.presentation.weather.ForecastUiState
 
 class WeatherLayout @JvmOverloads constructor(
@@ -195,17 +202,14 @@ class WeatherLayout @JvmOverloads constructor(
         cityTextView.text = city
     }
 
-    override fun showTemperature(temperature: com.malomnogo.presentation.weather.TemperatureUiState) {
+    override fun showTemperature(temperature: TemperatureUiState) {
         temperature.update(temperatureView)
     }
 
     override fun showHourForecast(hourForecast: ForecastUiState.Hour) {
         hourForecast.update(object : ShowHourForecast {
-            override fun showTitle(title: String) {
-                hourForecastTitleTextView.text = title
-            }
 
-            override fun showHourlyForecast(hourlyForecast: List<com.malomnogo.presentation.weather.HourUiState>) {
+            override fun showHourlyForecast(hourlyForecast: List<HourUiState>) {
                 hourForecastAdapter.update(hourlyForecast)
             }
 
@@ -221,11 +225,8 @@ class WeatherLayout @JvmOverloads constructor(
 
     override fun showDayForecast(dayForecast: ForecastUiState.Day) {
         dayForecast.update(object : ShowDayForecast {
-            override fun showTitle(title: String) {
-                dayForecastTitleTextView.text = title
-            }
 
-            override fun showDailyForecast(dailyForecast: List<com.malomnogo.presentation.weather.DayForecastUiState>) {
+            override fun showDailyForecast(dailyForecast: List<DayForecastUiState>) {
                 dayForecastAdapter.update(dailyForecast)
             }
 
@@ -270,7 +271,7 @@ class WeatherLayout @JvmOverloads constructor(
             for (i in 0 until childCount) {
                 val child = parent.getChildAt(i)
                 val position = parent.getChildAdapterPosition(child)
-                
+
                 if (position != RecyclerView.NO_POSITION && position < state.itemCount - 1) {
                     val right = child.right.toFloat()
                     val centerY = child.top + child.height / 2f

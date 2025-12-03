@@ -1,4 +1,4 @@
-package com.malomnogo.presentation.weather
+package com.malomnogo.presentation.day
 
 import com.malomnogo.presentation.weather.views.ShowDay
 

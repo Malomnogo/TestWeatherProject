@@ -1,4 +1,4 @@
-package com.malomnogo.presentation.weather.views
+package com.malomnogo.presentation.day
 
 import android.content.Context
 import android.view.Gravity
@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.R as MaterialR
 import com.malomnogo.presentation.R
 import com.malomnogo.presentation.core.views.CustomImageView
-import com.malomnogo.presentation.weather.DayForecastUiState
+import com.malomnogo.presentation.weather.views.ShowDay
 
 class DayForecastAdapter : RecyclerView.Adapter<DayForecastAdapter.DayViewHolder>() {
 

@@ -1,14 +1,15 @@
-package com.malomnogo.presentation.weather
+package com.malomnogo.presentation.day
 
+import com.malomnogo.presentation.hour.HourUiState
 import com.malomnogo.presentation.weather.views.ShowDay
-import com.malomnogo.presentation.weather.views.ShowHourForecast
+import com.malomnogo.presentation.hour.ShowHourForecast
 
 interface ForecastDayUiState {
 
     fun update(dayView: ShowDay)
-    
+
     fun updateHour(hourView: ShowHourForecast)
-    
+
     fun toDayForecastUiState(): DayForecastUiState
 
     data class Success(

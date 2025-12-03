@@ -1,7 +1,8 @@
-package com.malomnogo.presentation.weather.views
+package com.malomnogo.presentation.hour
 
 import android.content.Context
 import android.view.Gravity
+import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -12,7 +13,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.R as MaterialR
 import com.malomnogo.presentation.R
-import com.malomnogo.presentation.weather.HourUiState
+import com.malomnogo.presentation.weather.views.ShowHour
 
 class HourForecastAdapter : RecyclerView.Adapter<HourForecastAdapter.HourViewHolder>() {
 
@@ -59,7 +60,7 @@ class HourForecastAdapter : RecyclerView.Adapter<HourForecastAdapter.HourViewHol
                 }
 
                 override fun change(visible: Boolean) {
-                    itemView.visibility = if (visible) android.view.View.VISIBLE else android.view.View.GONE
+                    itemView.visibility = if (visible) View.VISIBLE else View.GONE
                 }
             })
         }

@@ -1,4 +1,4 @@
-package com.malomnogo.presentation.weather
+package com.malomnogo.presentation.hour
 
 import com.malomnogo.presentation.weather.views.ShowHour
 
