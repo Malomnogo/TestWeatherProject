@@ -37,6 +37,7 @@ dependencies {
     api(libs.androidx.core.ktx)
     api(libs.androidx.lifecycle.viewmodel.ktx)
     api(libs.androidx.appcompat)
+    api(libs.androidx.recyclerview)
+    api("com.github.bumptech.glide:glide:4.16.0")
     implementation(libs.material)
-
 }

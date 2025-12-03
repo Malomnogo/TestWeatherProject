@@ -1,7 +1,12 @@
 package com.malomnogo.testweatherproject.weather.modules
 
 import com.malomnogo.data.weather.cloud.WeatherCloudDataSource
+import com.malomnogo.data.weather.cloud.model.condition.TemperatureConditionCloudMapper
 import com.malomnogo.data.weather.cloud.model.core.WeatherCloudMapper
+import com.malomnogo.data.weather.cloud.model.forecast.ForecastCloudMapper
+import com.malomnogo.data.weather.cloud.model.forecastDay.ForecastDayCloudMapper
+import com.malomnogo.data.weather.cloud.model.forecastDay.day.DayCloudMapper
+import com.malomnogo.data.weather.cloud.model.forecastDay.hour.HourCloudMapper
 import com.malomnogo.data.weather.cloud.model.location.LocationCloudRemoteMapper
 import com.malomnogo.data.weather.cloud.model.temperature.TemperatureCloudMapper
 import com.malomnogo.presentation.weather.BaseWeatherDomainToUiMapper
@@ -18,6 +23,7 @@ class WeatherModule(
 
     override fun viewModel(): WeatherViewModel {
         val provideResources = core.provideResources()
+        val conditionMapper = TemperatureConditionCloudMapper.ToDomain(provideResources)
         return WeatherViewModel(
             runAsync = core.provideRunAsync(),
             uiObservable = WeatherUiObservable.Base(),
@@ -31,9 +37,21 @@ class WeatherModule(
                 weatherMapper = WeatherCloudMapper.ToDomain(
                     locationRemoteMapper = LocationCloudRemoteMapper.ToDomain(provideResources),
                     temperatureCloudMapper = TemperatureCloudMapper.ToDomain(
-                        provideResources
+                        provideResources = provideResources,
+                        conditionMapper = conditionMapper
                     ),
-                    provideResources = provideResources
+                    provideResources = provideResources,
+                    forecastCloudMapper = ForecastCloudMapper.ToDomain(
+                        provideResources = provideResources,
+                        forecastDayMapper = ForecastDayCloudMapper.ToDomain(
+                            provideResources = provideResources,
+                            dayMapper = DayCloudMapper.ToDomain(
+                                provideResources = provideResources,
+                                conditionMapper = conditionMapper
+                            ),
+                            hourMapper = HourCloudMapper.ToDomain(provideResources = provideResources)
+                        )
+                    )
                 )
             ),
             mapper = BaseWeatherDomainToUiMapper(

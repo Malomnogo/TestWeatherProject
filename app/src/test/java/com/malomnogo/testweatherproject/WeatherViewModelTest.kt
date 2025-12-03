@@ -1,5 +1,10 @@
 package com.malomnogo.testweatherproject
 
+import com.malomnogo.domain.ConditionDomain
+import com.malomnogo.domain.DayDomain
+import com.malomnogo.domain.ForecastDayDomain
+import com.malomnogo.domain.ForecastDomain
+import com.malomnogo.domain.HourDomain
 import com.malomnogo.domain.TemperatureDomain
 import com.malomnogo.domain.WeatherDomain
 import com.malomnogo.domain.WeatherRepository
@@ -42,10 +47,7 @@ class WeatherViewModelTest {
 
     @Test
     fun testFirstRun() {
-        repository.result = WeatherDomain.Success(
-            city = "Moscow",
-            temperature = TemperatureDomain.Success(temperature = 30.0)
-        )
+        repository.result = createSuccessWeatherDomain()
         viewModel.init(isFirstOpen = true)
         assertEquals(listOf(WeatherUiState.Progress), uiObservable.states)
         assertEquals(
@@ -167,10 +169,7 @@ class WeatherViewModelTest {
             order
         )
 
-        repository.result = WeatherDomain.Success(
-            city = "Moscow",
-            temperature = TemperatureDomain.Success(temperature = 30.0)
-        )
+        repository.result = createSuccessWeatherDomain()
         viewModel.load()
 
         assertEquals(
@@ -226,6 +225,53 @@ internal const val RUN_ASYNC_UI = "RunAsync#runAsync{uiBlock.invoke(result)}"
 private const val OBSERVABLE_UPDATE = "UiObservable#updateUi"
 private const val OBSERVABLE_UPDATE_OBSERVER = "UiObservable#updateObserver"
 private const val REPOSITORY_LOAD_DATA = "Repository#loadData"
+
+private fun createSuccessWeatherDomain(): WeatherDomain.Success {
+    val hourlyForecast = listOf(
+        HourDomain.Success(timeEpoch = 1733011200L, tempC = 0.0),
+        HourDomain.Success(timeEpoch = 1733014800L, tempC = 1.0),
+        HourDomain.Success(timeEpoch = 1733018400L, tempC = 2.0)
+    )
+    
+    val dailyForecast = listOf(
+        ForecastDayDomain.Success(
+            dateEpoch = 1733011200L,
+            day = DayDomain.Success(
+                maxTempC = 1.0,
+                minTempC = -1.0,
+                conditionDomain = ConditionDomain.Success(text = "Sunny", iconUrl = "http://icon1.png")
+            ),
+            hour = hourlyForecast
+        ),
+        ForecastDayDomain.Success(
+            dateEpoch = 1733097600L,
+            day = DayDomain.Success(
+                maxTempC = 2.0,
+                minTempC = -2.0,
+                conditionDomain = ConditionDomain.Success(text = "Cloudy", iconUrl = "http://icon2.png")
+            ),
+            hour = emptyList()
+        ),
+        ForecastDayDomain.Success(
+            dateEpoch = 1733184000L,
+            day = DayDomain.Success(
+                maxTempC = 3.0,
+                minTempC = -3.0,
+                conditionDomain = ConditionDomain.Success(text = "Rainy", iconUrl = "http://icon3.png")
+            ),
+            hour = emptyList()
+        )
+    )
+    
+    return WeatherDomain.Success(
+        city = "Moscow",
+        temperature = TemperatureDomain.Success(
+            temperature = 30.0,
+            condition = ConditionDomain.Success(text = "Sunny", iconUrl = "http://icon.png")
+        ),
+        forecast = ForecastDomain.Success(forecastDay = dailyForecast)
+    )
+}
 
 private class FakeWeatherUiObservable(private val order: Order) : WeatherUiObservable {
 
