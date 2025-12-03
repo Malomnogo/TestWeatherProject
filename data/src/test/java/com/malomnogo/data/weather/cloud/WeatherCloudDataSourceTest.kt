@@ -37,7 +37,14 @@ class WeatherCloudDataSourceTest {
     fun testFetchForecast() = runBlocking {
         val expectedWeatherCloud = WeatherCloud(
             location = LocationCloud(name = "Moscow"),
-            current = CurrentTemperatureCloud(tempC = 30.0)
+            current = CurrentTemperatureCloud(
+                tempC = 30.0,
+                condition = com.malomnogo.data.weather.cloud.model.condition.TemperatureConditionCloud(
+                    text = "Sunny",
+                    icon = "//icon.png"
+                )
+            ),
+            forecast = null
         )
         fakeService.result = expectedWeatherCloud
         fakeProvideApiKey.apiKey = "test-api-key"

@@ -41,12 +41,22 @@ class BaseWeatherRepositoryTest {
     fun testSuccess() = runBlocking {
         val expectedWeatherDomain = WeatherDomain.Success(
             city = "Moscow",
-            temperature = TemperatureDomain.Success(temperature = 30.0)
+            temperature = TemperatureDomain.Success(
+                temperature = 30.0,
+                condition = com.malomnogo.domain.ConditionDomain.Success(
+                    text = "Sunny",
+                    iconUrl = "http://icon.png"
+                )
+            ),
+            forecast = com.malomnogo.domain.ForecastDomain.Success(
+                forecastDay = emptyList()
+            )
         )
         fakeWeatherMapper.result = expectedWeatherDomain
         fakeCloudDataSource.result = WeatherCloud(
             location = null,
-            current = null
+            current = null,
+            forecast = null
         )
 
         val result = repository.loadData()
@@ -112,7 +122,8 @@ private class FakeWeatherCloudMapper(
 
     override fun map(
         location: com.malomnogo.data.weather.cloud.model.location.LocationCloud?,
-        current: com.malomnogo.data.weather.cloud.model.temperature.CurrentTemperatureCloud?
+        current: com.malomnogo.data.weather.cloud.model.temperature.CurrentTemperatureCloud?,
+        forecast: com.malomnogo.data.weather.cloud.model.forecast.ForecastCloud?
     ): WeatherDomain {
         order.add(WEATHER_CLOUD_REMOTE_MAPPER_MAP)
         return result
