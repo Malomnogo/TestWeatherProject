@@ -31,7 +31,7 @@ interface DayCloudMapper<T> {
             DayDomain.Success(
                 maxTempC = maxTempC,
                 minTempC = minTempC,
-                conditionDomain = conditionDomain.map(conditionMapper)
+                condition = conditionDomain.map(conditionMapper)
             )
     }
 }

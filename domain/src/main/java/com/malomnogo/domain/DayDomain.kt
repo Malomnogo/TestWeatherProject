@@ -9,7 +9,7 @@ interface DayDomain {
         fun mapSuccess(
             maxTempC: Double,
             minTempC: Double,
-            conditionDomain: ConditionDomain
+            condition: ConditionDomain
         ): T
 
         fun mapError(message: String): T
@@ -18,13 +18,13 @@ interface DayDomain {
     class Success(
         private val maxTempC: Double,
         private val minTempC: Double,
-        private val conditionDomain: ConditionDomain
+        private val condition: ConditionDomain
     ) : DayDomain {
 
         override fun <T : Any> map(mapper: Mapper<T>) = mapper.mapSuccess(
             maxTempC = maxTempC,
             minTempC = minTempC,
-            conditionDomain = conditionDomain
+            condition = condition
         )
     }
 
