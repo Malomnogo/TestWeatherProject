@@ -4,7 +4,7 @@ import com.malomnogo.data.FakeHandleError
 import com.malomnogo.data.Order
 import com.malomnogo.data.weather.cloud.WeatherCloudDataSource
 import com.malomnogo.data.weather.cloud.model.core.WeatherCloud
-import com.malomnogo.data.weather.cloud.model.core.WeatherCloudRemoteMapper
+import com.malomnogo.data.weather.cloud.model.core.WeatherCloudMapper
 import com.malomnogo.domain.TemperatureDomain
 import com.malomnogo.domain.WeatherDomain
 import kotlinx.coroutines.runBlocking
@@ -21,7 +21,7 @@ class BaseWeatherRepositoryTest {
     private lateinit var order: Order
     private lateinit var fakeCloudDataSource: FakeWeatherCloudDataSource
     private lateinit var fakeHandleError: FakeHandleError
-    private lateinit var fakeWeatherMapper: FakeWeatherCloudRemoteMapper
+    private lateinit var fakeWeatherMapper: FakeWeatherCloudMapper
     private lateinit var repository: BaseWeatherRepository
 
     @Before
@@ -29,7 +29,7 @@ class BaseWeatherRepositoryTest {
         order = Order()
         fakeCloudDataSource = FakeWeatherCloudDataSource(order)
         fakeHandleError = FakeHandleError(order)
-        fakeWeatherMapper = FakeWeatherCloudRemoteMapper(order)
+        fakeWeatherMapper = FakeWeatherCloudMapper(order)
         repository = BaseWeatherRepository(
             cloudDataSource = fakeCloudDataSource,
             handleError = fakeHandleError,
@@ -41,12 +41,22 @@ class BaseWeatherRepositoryTest {
     fun testSuccess() = runBlocking {
         val expectedWeatherDomain = WeatherDomain.Success(
             city = "Moscow",
-            temperature = TemperatureDomain.Success(temperature = 30.0)
+            temperature = TemperatureDomain.Success(
+                temperature = 30.0,
+                condition = com.malomnogo.domain.ConditionDomain.Success(
+                    text = "Sunny",
+                    iconUrl = "http://icon.png"
+                )
+            ),
+            forecast = com.malomnogo.domain.ForecastDomain.Success(
+                forecastDay = emptyList()
+            )
         )
         fakeWeatherMapper.result = expectedWeatherDomain
         fakeCloudDataSource.result = WeatherCloud(
             location = null,
-            current = null
+            current = null,
+            forecast = null
         )
 
         val result = repository.loadData()
@@ -104,15 +114,16 @@ private class FakeWeatherCloudDataSource(
     }
 }
 
-private class FakeWeatherCloudRemoteMapper(
+private class FakeWeatherCloudMapper(
     private val order: Order
-) : WeatherCloudRemoteMapper<WeatherDomain> {
+) : WeatherCloudMapper<WeatherDomain> {
 
     var result: WeatherDomain = WeatherDomain.Error(message = "")
 
     override fun map(
         location: com.malomnogo.data.weather.cloud.model.location.LocationCloud?,
-        current: com.malomnogo.data.weather.cloud.model.temperature.TemperatureCloud?
+        current: com.malomnogo.data.weather.cloud.model.temperature.CurrentTemperatureCloud?,
+        forecast: com.malomnogo.data.weather.cloud.model.forecast.ForecastCloud?
     ): WeatherDomain {
         order.add(WEATHER_CLOUD_REMOTE_MAPPER_MAP)
         return result

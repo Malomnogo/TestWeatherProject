@@ -2,14 +2,14 @@ package com.malomnogo.data.weather
 
 import com.malomnogo.data.core.HandleError
 import com.malomnogo.data.weather.cloud.WeatherCloudDataSource
-import com.malomnogo.data.weather.cloud.model.core.WeatherCloudRemoteMapper
+import com.malomnogo.data.weather.cloud.model.core.WeatherCloudMapper
 import com.malomnogo.domain.WeatherDomain
 import com.malomnogo.domain.WeatherRepository
 
 class BaseWeatherRepository(
     private val cloudDataSource: WeatherCloudDataSource,
     private val handleError: HandleError,
-    private val weatherMapper: WeatherCloudRemoteMapper<WeatherDomain>
+    private val weatherMapper: WeatherCloudMapper<WeatherDomain>
 ) : WeatherRepository {
 
     override suspend fun loadData(): WeatherDomain {

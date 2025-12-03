@@ -4,7 +4,7 @@ import com.malomnogo.data.Order
 import com.malomnogo.data.core.ProvideApiKey
 import com.malomnogo.data.weather.cloud.model.core.WeatherCloud
 import com.malomnogo.data.weather.cloud.model.location.LocationCloud
-import com.malomnogo.data.weather.cloud.model.temperature.TemperatureCloud
+import com.malomnogo.data.weather.cloud.model.temperature.CurrentTemperatureCloud
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -37,7 +37,14 @@ class WeatherCloudDataSourceTest {
     fun testFetchForecast() = runBlocking {
         val expectedWeatherCloud = WeatherCloud(
             location = LocationCloud(name = "Moscow"),
-            current = TemperatureCloud(tempC = 30.0)
+            current = CurrentTemperatureCloud(
+                tempC = 30.0,
+                condition = com.malomnogo.data.weather.cloud.model.condition.TemperatureConditionCloud(
+                    text = "Sunny",
+                    icon = "//icon.png"
+                )
+            ),
+            forecast = null
         )
         fakeService.result = expectedWeatherCloud
         fakeProvideApiKey.apiKey = "test-api-key"

@@ -6,15 +6,20 @@ interface TemperatureDomain {
 
     interface Mapper<T : Any> {
 
-        fun mapSuccess(temperature: Double): T
+        fun mapSuccess(temperature: Double, condition: ConditionDomain): T
+
         fun mapError(message: String): T
     }
 
     class Success(
-        private val temperature: Double
+        private val temperature: Double,
+        private val condition: ConditionDomain,
     ) : TemperatureDomain {
 
-        override fun <T : Any> map(mapper: Mapper<T>) = mapper.mapSuccess(temperature = temperature)
+        override fun <T : Any> map(mapper: Mapper<T>) = mapper.mapSuccess(
+            temperature = temperature,
+            condition = condition
+        )
     }
 
     class Error(

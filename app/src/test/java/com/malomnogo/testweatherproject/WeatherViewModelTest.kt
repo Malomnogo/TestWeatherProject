@@ -1,11 +1,23 @@
 package com.malomnogo.testweatherproject
 
+import com.malomnogo.domain.ConditionDomain
+import com.malomnogo.domain.DayDomain
+import com.malomnogo.domain.ForecastDayDomain
+import com.malomnogo.domain.ForecastDomain
+import com.malomnogo.domain.HourDomain
 import com.malomnogo.domain.TemperatureDomain
 import com.malomnogo.domain.WeatherDomain
 import com.malomnogo.domain.WeatherRepository
 import com.malomnogo.presentation.core.FormatWeather
-import com.malomnogo.presentation.weather.BaseTemperatureMapper
-import com.malomnogo.presentation.weather.BaseWeatherDomainToUiMapper
+import com.malomnogo.presentation.weather.mapper.BaseTemperatureDomainMapper
+import com.malomnogo.presentation.weather.mapper.BaseWeatherDomainToUiMapper
+import com.malomnogo.presentation.core.mapper.BaseConditionDomainMapper
+import com.malomnogo.presentation.weather.mapper.BaseForecastDomainToUiMapper
+import com.malomnogo.presentation.day.mapper.BaseForecastDayDomainMapper
+import com.malomnogo.presentation.day.mapper.DayDomainToUiMapper
+import com.malomnogo.presentation.hour.mapper.HourDomainToUiMapper
+import com.malomnogo.presentation.core.FormatDate
+import com.malomnogo.presentation.core.FormatTime
 import com.malomnogo.presentation.weather.WeatherUiObservable
 import com.malomnogo.presentation.weather.UpdateWeatherUi
 import com.malomnogo.presentation.weather.WeatherUiState
@@ -28,10 +40,27 @@ class WeatherViewModelTest {
         runAsync = FakeRunAsync(order)
         uiObservable = FakeWeatherUiObservable(order)
         repository = FakeRepository(order)
-        val formatter = FormatWeather.Base()
-        val mapper = BaseWeatherDomainToUiMapper(
-            temperatureMapper = BaseTemperatureMapper(formatWeather = formatter)
+          val formatter = FormatWeather.Base()
+          val formatDate = FormatDate.Base()
+          val mapper = BaseWeatherDomainToUiMapper(
+              temperatureMapper = BaseTemperatureDomainMapper(
+                  formatWeather = formatter,
+                  conditionMapper = BaseConditionDomainMapper()
+              ),
+        forecastMapper = BaseForecastDomainToUiMapper(
+            forecastDayMapper = BaseForecastDayDomainMapper(
+                formatDate = formatDate,
+                dayMapper = DayDomainToUiMapper(
+                    formatWeather = formatter,
+                    conditionMapper = BaseConditionDomainMapper()
+                ),
+                hourMapper = HourDomainToUiMapper(
+                    formatTime = FormatTime.Base(),
+                    formatWeather = formatter
+                )
+            )
         )
+          )
         viewModel = WeatherViewModel(
             runAsync = runAsync,
             uiObservable = uiObservable,
@@ -42,10 +71,7 @@ class WeatherViewModelTest {
 
     @Test
     fun testFirstRun() {
-        repository.result = WeatherDomain.Success(
-            city = "Moscow",
-            temperature = TemperatureDomain.Success(temperature = 30.0)
-        )
+        repository.result = createSuccessWeatherDomain()
         viewModel.init(isFirstOpen = true)
         assertEquals(listOf(WeatherUiState.Progress), uiObservable.states)
         assertEquals(
@@ -55,16 +81,9 @@ class WeatherViewModelTest {
         )
 
         runAsync.returnResult()
-        assertEquals(
-            listOf(
-                WeatherUiState.Progress,
-                WeatherUiState.Success(
-                    city = "Moscow",
-                    temperature = "30°C"
-                )
-            ),
-            uiObservable.states
-        )
+        assertEquals(WeatherUiState.Progress, uiObservable.states[0])
+        val expected = createExpectedSuccessState()
+        assertEquals(expected, uiObservable.states[1])
 
         val uiCallback = object : UpdateWeatherUi {
             override fun updateUi(uiState: WeatherUiState) = Unit
@@ -167,10 +186,7 @@ class WeatherViewModelTest {
             order
         )
 
-        repository.result = WeatherDomain.Success(
-            city = "Moscow",
-            temperature = TemperatureDomain.Success(temperature = 30.0)
-        )
+        repository.result = createSuccessWeatherDomain()
         viewModel.load()
 
         assertEquals(
@@ -194,18 +210,11 @@ class WeatherViewModelTest {
 
         runAsync.returnResult()
 
-        assertEquals(
-            listOf(
-                WeatherUiState.Progress,
-                WeatherUiState.Error("No internet connection"),
-                WeatherUiState.Progress,
-                WeatherUiState.Success(
-                    city = "Moscow",
-                    temperature = "30°C"
-                )
-            ),
-            uiObservable.states
-        )
+        assertEquals(WeatherUiState.Progress, uiObservable.states[0])
+        assertEquals(WeatherUiState.Error("No internet connection"), uiObservable.states[1])
+        assertEquals(WeatherUiState.Progress, uiObservable.states[2])
+        val expected = createExpectedSuccessState()
+        assertEquals(expected, uiObservable.states[3])
 
         assertEquals(
             Order(
@@ -226,6 +235,69 @@ internal const val RUN_ASYNC_UI = "RunAsync#runAsync{uiBlock.invoke(result)}"
 private const val OBSERVABLE_UPDATE = "UiObservable#updateUi"
 private const val OBSERVABLE_UPDATE_OBSERVER = "UiObservable#updateObserver"
 private const val REPOSITORY_LOAD_DATA = "Repository#loadData"
+
+private fun createExpectedSuccessState(): WeatherUiState {
+    val formatter = FormatWeather.Base()
+    val formatDate = FormatDate.Base()
+    val formatTime = FormatTime.Base()
+    
+    val weatherDomain = createSuccessWeatherDomain()
+    val mapper = BaseWeatherDomainToUiMapper(
+        temperatureMapper = BaseTemperatureDomainMapper(
+            formatWeather = formatter,
+            conditionMapper = BaseConditionDomainMapper()
+        ),
+        forecastMapper = BaseForecastDomainToUiMapper(
+            forecastDayMapper = BaseForecastDayDomainMapper(
+                formatDate = formatDate,
+                dayMapper = DayDomainToUiMapper(
+                    formatWeather = formatter,
+                    conditionMapper = BaseConditionDomainMapper()
+                ),
+                hourMapper = HourDomainToUiMapper(
+                    formatTime = formatTime,
+                    formatWeather = formatter
+                )
+            )
+        )
+    )
+    
+    return weatherDomain.map(mapper)
+}
+
+private fun createSuccessWeatherDomain(): WeatherDomain.Success {
+    val baseTimeEpoch = 1764536400L // 1.12.2025 00:00
+    val hourlyForecast = (0..2).map { index ->
+        HourDomain.Success(
+            timeEpoch = baseTimeEpoch + index * 3600L,
+            tempC = index.toDouble()
+        )
+    }
+    
+    val dailyForecast = (0..2).map { index ->
+        ForecastDayDomain.Success(
+            dateEpoch = baseTimeEpoch + index * 86400L,
+            day = DayDomain.Success(
+                maxTempC = (index + 1).toDouble(),
+                minTempC = -(index + 1).toDouble(),
+                condition = ConditionDomain.Success(
+                    text = "Sunny",
+                    iconUrl = "http://icon$index.png"
+                )
+            ),
+            hour = if (index == 0) hourlyForecast else emptyList()
+        )
+    }
+    
+    return WeatherDomain.Success(
+        city = "Moscow",
+        temperature = TemperatureDomain.Success(
+            temperature = 30.0,
+            condition = ConditionDomain.Success(text = "Sunny", iconUrl = "http://icon.png")
+        ),
+        forecast = ForecastDomain.Success(forecastDay = dailyForecast)
+    )
+}
 
 private class FakeWeatherUiObservable(private val order: Order) : WeatherUiObservable {
 

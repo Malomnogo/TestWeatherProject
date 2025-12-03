@@ -4,8 +4,8 @@ import com.malomnogo.data.FakeProvideResources
 import com.malomnogo.data.Order
 import com.malomnogo.data.weather.cloud.model.location.LocationCloud
 import com.malomnogo.data.weather.cloud.model.location.LocationCloudRemoteMapper
-import com.malomnogo.data.weather.cloud.model.temperature.TemperatureCloud
-import com.malomnogo.data.weather.cloud.model.temperature.TemperatureCloudRemoteMapper
+import com.malomnogo.data.weather.cloud.model.temperature.CurrentTemperatureCloud
+import com.malomnogo.data.weather.cloud.model.temperature.TemperatureCloudMapper
 import com.malomnogo.data.PROVIDE_RESOURCES_SERVICE_SENT_UNKNOWN_DATA
 import com.malomnogo.domain.TemperatureDomain
 import com.malomnogo.domain.WeatherDomain
@@ -21,8 +21,8 @@ class WeatherCloudRemoteMapperTest {
     private lateinit var order: Order
     private lateinit var fakeProvideResources: FakeProvideResources
     private lateinit var fakeLocationMapper: FakeLocationCloudRemoteMapper
-    private lateinit var fakeTemperatureMapper: FakeTemperatureCloudRemoteMapper
-    private lateinit var mapper: WeatherCloudRemoteMapper.ToDomain
+    private lateinit var fakeTemperatureMapper: FakeTemperatureCloudMapper
+    private lateinit var mapper: WeatherCloudMapper.ToDomain
 
     @Before
     fun setup() {
@@ -30,10 +30,11 @@ class WeatherCloudRemoteMapperTest {
         fakeProvideResources = FakeProvideResources(order)
         fakeProvideResources.serviceSentUnknownDataResult = "Unknown data"
         fakeLocationMapper = FakeLocationCloudRemoteMapper(order)
-        fakeTemperatureMapper = FakeTemperatureCloudRemoteMapper(order)
-        mapper = WeatherCloudRemoteMapper.ToDomain(
+        fakeTemperatureMapper = FakeTemperatureCloudMapper(order)
+        mapper = WeatherCloudMapper.ToDomain(
             locationRemoteMapper = fakeLocationMapper,
-            temperatureCloudRemoteMapper = fakeTemperatureMapper,
+            temperatureCloudMapper = fakeTemperatureMapper,
+            forecastCloudMapper = FakeForecastCloudMapper(order),
             provideResources = fakeProvideResources
         )
     }
@@ -41,19 +42,36 @@ class WeatherCloudRemoteMapperTest {
     @Test
     fun testMapSuccess() {
         fakeLocationMapper.result = "Moscow"
-        fakeTemperatureMapper.result = TemperatureDomain.Success(temperature = 30.0)
+        fakeTemperatureMapper.result = TemperatureDomain.Success(
+            temperature = 30.0,
+            condition = com.malomnogo.domain.ConditionDomain.Success(
+                text = "Sunny",
+                iconUrl = "http://icon.png"
+            )
+        )
 
         val result = mapper.map(
             location = LocationCloud(name = "Moscow"),
-            current = TemperatureCloud(tempC = 30.0)
+            current = CurrentTemperatureCloud(
+                tempC = 30.0,
+                condition = com.malomnogo.data.weather.cloud.model.condition.TemperatureConditionCloud(
+                    text = "Sunny",
+                    icon = "//icon.png"
+                )
+            ),
+            forecast = com.malomnogo.data.weather.cloud.model.forecast.ForecastCloud(forecastDay = null)
         )
 
         assert(result is WeatherDomain.Success)
         val successResult = result as WeatherDomain.Success
         val mapped = successResult.map(object : WeatherDomain.Mapper<Pair<String, Double>> {
-            override fun mapSuccess(city: String, temperature: TemperatureDomain): Pair<String, Double> {
+            override fun mapSuccess(
+                city: String,
+                temperature: TemperatureDomain,
+                forecast: com.malomnogo.domain.ForecastDomain
+            ): Pair<String, Double> {
                 val temp = temperature.map(object : TemperatureDomain.Mapper<Double> {
-                    override fun mapSuccess(temperature: Double) = temperature
+                    override fun mapSuccess(temperature: Double, condition: com.malomnogo.domain.ConditionDomain) = temperature
                     override fun mapError(message: String) = -1.0
                 })
                 return Pair(city, temp)
@@ -75,10 +93,23 @@ class WeatherCloudRemoteMapperTest {
 
     @Test
     fun testMapNullLocation() {
-        fakeTemperatureMapper.result = TemperatureDomain.Success(temperature = 30.0)
+        fakeTemperatureMapper.result = TemperatureDomain.Success(
+            temperature = 30.0,
+            condition = com.malomnogo.domain.ConditionDomain.Success(
+                text = "Sunny",
+                iconUrl = "http://icon.png"
+            )
+        )
         val result = mapper.map(
             location = null,
-            current = TemperatureCloud(tempC = 30.0)
+            current = CurrentTemperatureCloud(
+                tempC = 30.0,
+                condition = com.malomnogo.data.weather.cloud.model.condition.TemperatureConditionCloud(
+                    text = "Sunny",
+                    icon = "//icon.png"
+                )
+            ),
+            forecast = com.malomnogo.data.weather.cloud.model.forecast.ForecastCloud(forecastDay = null)
         )
 
         assertEquals(
@@ -101,7 +132,8 @@ class WeatherCloudRemoteMapperTest {
         fakeLocationMapper.result = "Moscow"
         val result = mapper.map(
             location = LocationCloud(name = "Moscow"),
-            current = null
+            current = null,
+            forecast = com.malomnogo.data.weather.cloud.model.forecast.ForecastCloud(forecastDay = null)
         )
 
         assertEquals(
@@ -123,7 +155,8 @@ class WeatherCloudRemoteMapperTest {
     fun testMapBothNull() {
         val result = mapper.map(
             location = null,
-            current = null
+            current = null,
+            forecast = null
         )
 
         assertEquals(
@@ -151,14 +184,28 @@ private class FakeLocationCloudRemoteMapper(
     }
 }
 
-private class FakeTemperatureCloudRemoteMapper(
+private class FakeTemperatureCloudMapper(
     private val order: Order
-) : TemperatureCloudRemoteMapper<TemperatureDomain> {
+) : TemperatureCloudMapper<TemperatureDomain> {
 
     var result: TemperatureDomain = TemperatureDomain.Error(message = "")
 
-    override fun map(temperature: Double?): TemperatureDomain {
+    override fun map(
+        temperature: Double?,
+        condition: com.malomnogo.data.weather.cloud.model.condition.TemperatureConditionCloud?
+    ): TemperatureDomain {
         order.add(TEMPERATURE_CLOUD_REMOTE_MAPPER_MAP)
+        return result
+    }
+}
+
+private class FakeForecastCloudMapper(
+    private val order: Order
+) : com.malomnogo.data.weather.cloud.model.forecast.ForecastCloudMapper<com.malomnogo.domain.ForecastDomain> {
+
+    var result: com.malomnogo.domain.ForecastDomain = com.malomnogo.domain.ForecastDomain.Error(message = "")
+
+    override fun map(forecastDay: List<com.malomnogo.data.weather.cloud.model.forecastDay.ForecastDayCloud>?): com.malomnogo.domain.ForecastDomain {
         return result
     }
 }
